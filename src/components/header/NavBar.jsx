@@ -5,6 +5,9 @@ import CartSiteBar from "./CartSideBar";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
+  // demo
+  let user = true;
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -62,32 +65,34 @@ const NavBar = () => {
 
           {/* --------------------- */}
 
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
-              <span className="block truncate text-sm font-medium">
-                name@flowbite.com
-              </span>
-            </Dropdown.Header>
-            <Dropdown.Item>Dashboard</Dropdown.Item>
-            <Dropdown.Item>Update Profile</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item>Sign out</Dropdown.Item>
-          </Dropdown>
-          <button className="relative px-5 text-md font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-green-500 rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50">
-            
-            <Link to="/login">Join Us</Link>
-          </button>
+          {user ? (
+            <Dropdown
+              arrowIcon={false}
+              inline
+              label={
+                <Avatar
+                  alt="User settings"
+                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  rounded
+                />
+              }
+            >
+              <Dropdown.Header>
+                <span className="block text-sm">Bonnie Green</span>
+                <span className="block truncate text-sm font-medium">
+                  name@flowbite.com
+                </span>
+              </Dropdown.Header>
+              <Dropdown.Item>Dashboard</Dropdown.Item>
+              <Dropdown.Item>Update Profile</Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item>Sign out</Dropdown.Item>
+            </Dropdown>
+          ) : (
+            <button className="relative px-5 text-md font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-green-500 rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50">
+              <Link to="/login">Join Us</Link>
+            </button>
+          )}
 
           <Navbar.Toggle />
         </div>
