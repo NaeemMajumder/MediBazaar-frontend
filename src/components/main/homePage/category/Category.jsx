@@ -1,5 +1,5 @@
 import React from "react";
-import { FreeMode, Pagination } from "swiper/modules";
+import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "./category.css";
@@ -77,15 +77,16 @@ const Category = () => {
 
   return (
     <>
-      <h1 className="text-center text-3xl md:text-4xl lg:text-5xl text-[#164193] font-semibold heading mb-12">
-        Product Categories
+      <h1 className="text-center text-2xl md:text-3xl lg:text-4xl text-[#164193] font-semibold heading lg:mb-20 md:mb-14 mb-10">
+      Browse Our Product Categories
       </h1>
       <div>
         <Swiper
           spaceBetween={30}
           freeMode={true}
-          // pagination={{ clickable: true }}
-          modules={[FreeMode, Pagination]}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          speed={2000}
+          modules={[FreeMode, Pagination, Autoplay]}
           className="mySwiper mySwiper1"
           breakpoints={{
             400: {
@@ -118,6 +119,10 @@ const Category = () => {
             );
           })}
         </Swiper>
+      </div>
+
+      <div className="lg:mt-20 md:mt-14 mt-10 text-center">
+        <Link to="/categories" className="border py-2 px-4 border-blue-500 text-blue-500 rounded-md font-semibold hover:bg-blue-500 hover:text-white">See All Category</Link>
       </div>
     </>
   );

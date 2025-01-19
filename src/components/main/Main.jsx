@@ -1,5 +1,6 @@
 import HeroSlider from "../header/HeroSlider";
 import Category from "./homePage/category/Category";
+import Discount from "./homePage/discount/Discount";
 import Marquees from "./homePage/Marquees";
 
 const Main = () => {
@@ -10,8 +11,11 @@ const Main = () => {
         <Marquees />
       </section>
 
-        <section className="my-28 max-w-[1350px] mx-auto">
+        <section className="mt-32 max-w-[1350px] mx-auto">
             <Category/>
+        </section>
+        <section className="mt-32 max-w-[1350px] mx-auto px-4">
+            <Discount/>
         </section>
     </>
   );
