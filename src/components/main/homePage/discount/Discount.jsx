@@ -3,6 +3,8 @@ import { Pagination } from "swiper/modules";
 import ProductCard from "../../shared/ProductCard";
 import { Card } from "flowbite-react";
 
+import "./discount.css";
+
 const Discount = () => {
   return (
     <>
@@ -32,17 +34,12 @@ const Discount = () => {
               slidesPerView: 4,
             },
           }}
-          className="mySwiper2"
+          className="mySwiper2 "
         >
 
-          <SwiperSlide className=".swiper-slide2">
+          <SwiperSlide >
             <ProductCard/>
           </SwiperSlide>
-
-
-
-          {/*  */}
-
         </Swiper>
       </div>
     </>
