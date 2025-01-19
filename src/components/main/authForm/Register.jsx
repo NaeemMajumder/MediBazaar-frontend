@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import registerAnimation from "../../../../public/json/register.json";
 import Lottie from "lottie-react";
+import { Link } from "react-router-dom";
 
 const Register = ({ handleSubmitRegister }) => {
   const [formData, setFormData] = useState({
@@ -265,6 +266,10 @@ const Register = ({ handleSubmitRegister }) => {
               </button>
             </div>
           </form>
+          <div className="text-sm mt-3 text-center">
+                Already have an account?{" "}
+                <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
+              </div>
         </div>
       </div>
     </div>

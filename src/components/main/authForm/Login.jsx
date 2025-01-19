@@ -1,11 +1,44 @@
 import Lottie from "lottie-react";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import loginAnimation from "../../../../public/json/login.json";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
+import { Link } from "react-router-dom";
+import {
+  loadCaptchaEnginge,
+  LoadCanvasTemplate,
+  validateCaptcha,
+} from "react-simple-captcha";
 
 const Login = () => {
+  // login validate captcha
+  let [disable, setDisable] = useState(true);
+
+  // useEffect captcha
+  useEffect(() => {
+    loadCaptchaEnginge(6);
+  }, []);
+
+  //   handle Captcha Validation
+  let handleValidateCaptcha = () => {
+    let user_input_captcha = document.getElementById("captcha").value;
+
+    if (validateCaptcha(user_input_captcha) == true) {
+      alert("Captcha Matched");
+      setDisable(false);
+    } else {
+      alert("Captcha Does Not Match");
+      setDisable(true);
+    }
+  };
+
+  //   login form validation
+  let handleLoginFrom = (event) => {
+    event.preventDefault();
+    console.log("form submitted");
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#164193] to-[#00a9ff] md:px-4">
       <div className="flex flex-col md:flex-row bg-[#AAF0F0] rounded-lg shadow-lg max-w-4xl">
@@ -14,24 +47,7 @@ const Login = () => {
           <h2 className="text-3xl font-bold text-center text-[#164193] mb-6">
             Login
           </h2>
-          <form>
-            <div className="mb-4">
-              <label
-                htmlFor="username"
-                className="block mb-2 text-[#1ca288] font-bold"
-              >
-                User Name
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                placeholder="Enter your username"
-                required
-                className="w-full px-4 py-2 border-2 border-[#3AB092] rounded-lg focus:outline-none focus:border-[#164193]"
-              />
-            </div>
-
+          <form onSubmit={handleLoginFrom}>
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -66,11 +82,45 @@ const Login = () => {
               />
             </div>
 
+            <div className="mb-4">
+              <label
+                htmlFor="captcha"
+                className="block mb-2 text-[#1ca288] font-bold"
+              >
+                <LoadCanvasTemplate />
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  id="captcha"
+                  name="captcha"
+                  placeholder="write this here"
+                  required
+                  className="flex-grow px-4 py-2 border-2 border-[#3AB092] rounded-lg focus:outline-none focus:border-[#164193]"
+                />
+                <button
+                  onClick={handleValidateCaptcha}
+                  className={`px-4 py-2 ${disable?'bg-red-500':'bg-[#1ca288] hover:bg-[#0d705f]'} text-white font-medium rounded-lg  transition duration-300`}
+                >
+                  {
+                    disable?"Validate":"✔"
+                  }
+                </button>
+              </div>
+              <div className="text-sm mt-1">
+                Don&apos;t have an account?{" "}
+                <Link to="/register" className="text-blue-500 hover:underline">
+                  Register
+                </Link>
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="w-full py-2 text-white font-bold bg-[#00B092] rounded-lg hover:bg-[#1ca288] transition duration-300 mb-4"
+              className={`w-full py-2 text-white font-bold ${disable?'bg-gray-600':'bg-[#00B092] hover:bg-[#1ca288]'} rounded-lg  transition duration-300 mb-4`}
+              disabled={disable}
             >
-              Login
+              Login 
             </button>
 
             {/* Social Login Buttons */}
@@ -99,7 +149,10 @@ const Login = () => {
 
         {/* Right: Image */}
         <div className="hidden items-center md:block w-1/2">
-          <Lottie className="w-full mt-12" animationData={loginAnimation}></Lottie>
+          <Lottie
+            className="w-full mt-12"
+            animationData={loginAnimation}
+          ></Lottie>
         </div>
       </div>
     </div>
