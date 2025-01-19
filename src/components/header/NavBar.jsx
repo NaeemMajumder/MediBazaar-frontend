@@ -1,0 +1,98 @@
+import { Avatar, Badge, Dropdown, Navbar } from "flowbite-react";
+import { useState } from "react";
+import { GrCart } from "react-icons/gr";
+import CartSiteBar from "./CartSideBar";
+
+const NavBar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  let links = (
+    <>
+      <Navbar.Collapse>
+        <Navbar.Link href="#" className="font-semibold text-[#164193]">
+          Home
+        </Navbar.Link>
+        <Navbar.Link href="#" className="font-semibold text-[#164193]">
+          Shop
+        </Navbar.Link>
+        <Navbar.Link href="#" className="font-semibold text-[#164193]">
+          Language
+        </Navbar.Link>
+      </Navbar.Collapse>
+    </>
+  );
+  return (
+    <nav className="bg-[#AAEFEE] sticky top-0 z-50">
+      <Navbar fluid rounded className="max-w-[1350px] m-auto bg-transparent">
+        <Navbar.Brand href="/">
+          <img
+            src="/images/logo.png"
+            className="mr-3 h-8 md:h-12"
+            alt="Flowbite React Logo"
+          />
+          <span className="self-center whitespace-nowrap text-2xl font-extrabold text-[#164193] dark:text-[#1ca288] tracking-wide">
+            Medi<span className="text-[#1ca288]">Bazaar</span>
+          </span>
+        </Navbar.Brand>
+        <div className="flex gap-2 md:order-2">
+          {/* shopping cart */}
+          <button
+            onClick={toggleSidebar}
+            type="button"
+            className="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <GrCart className="w-6 h-6" />
+            <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-700 border-2 border-white rounded-full -top-1 -right-1 dark:border-gray-900">
+              7
+            </div>
+          </button>
+
+          <>
+            <CartSiteBar
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              toggleSidebar={toggleSidebar}
+            />
+          </>
+
+          {/* --------------------- */}
+
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="User settings"
+                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                rounded
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">Bonnie Green</span>
+              <span className="block truncate text-sm font-medium">
+                name@flowbite.com
+              </span>
+            </Dropdown.Header>
+            <Dropdown.Item>Dashboard</Dropdown.Item>
+            <Dropdown.Item>Update Profile</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item>Sign out</Dropdown.Item>
+          </Dropdown>
+          <button className="relative px-5 text-md font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-green-500 rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50">
+            Join Us
+          </button>
+
+          <Navbar.Toggle />
+        </div>
+        {links}
+      </Navbar>
+    </nav>
+  );
+};
+
+export default NavBar;
