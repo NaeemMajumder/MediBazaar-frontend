@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import registerAnimation from "../../../../public/json/register.json";
+import Lottie from "lottie-react";
 
 const Register = ({ handleSubmitRegister }) => {
   const [formData, setFormData] = useState({
@@ -60,12 +62,11 @@ const Register = ({ handleSubmitRegister }) => {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#164193] to-[#00a9ff] md:px-4 py-10">
       <div className="flex flex-col md:flex-row bg-[#AAF0F0] rounded-lg shadow-lg max-w-5xl">
         {/* Left: Image Section */}
-        <div className="hidden md:block w-1/2">
-          <img
-            src="https://img.lovepik.com/element/45009/8997.png_860.png"
-            alt="Register Illustration"
-            className="w-full h-full object-cover rounded-l-lg"
-          />
+        <div className="flex justify-center items-center">
+          <Lottie
+            className="w-full"
+            animationData={registerAnimation}
+          ></Lottie>
         </div>
 
         {/* Right: Form Section */}
