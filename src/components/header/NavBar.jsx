@@ -2,6 +2,7 @@ import { Avatar, Badge, Dropdown, Navbar } from "flowbite-react";
 import { useState } from "react";
 import { GrCart } from "react-icons/gr";
 import CartSiteBar from "./CartSideBar";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -84,7 +85,8 @@ const NavBar = () => {
             <Dropdown.Item>Sign out</Dropdown.Item>
           </Dropdown>
           <button className="relative px-5 text-md font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-green-500 rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50">
-            Join Us
+            
+            <Link to="/login">Join Us</Link>
           </button>
 
           <Navbar.Toggle />
