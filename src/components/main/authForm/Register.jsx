@@ -155,7 +155,7 @@ const Register = ({ handleSubmitRegister }) => {
               />
 
               {/* Password Requirements */}
-              <div className="mt-2 text-xs text-gray-600">
+              <div className="mt-2 text-xs text-gray-600 heading">
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center">
                     <span
@@ -239,7 +239,7 @@ const Register = ({ handleSubmitRegister }) => {
                 className="mt-1 block w-full px-4 py-2 border-2 border-[#3AB092] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#164193] sm:text-sm"
                 placeholder="Confirm your password"
               />
-              <div className="mt-2 text-sm text-gray-600">
+              <div className="mt-2 text-sm text-gray-600 heading">
                 <span
                   className={`${
                     confirmPasswordValid ? "text-blue-500" : "text-red-500"

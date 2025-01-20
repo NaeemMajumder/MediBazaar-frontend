@@ -106,7 +106,7 @@ const Category = () => {
           {categories.map((category, index) => {
             return (
               <SwiperSlide key={index}>
-                <Link to={'/login'} className="max-w-xs p-4 border rounded-lg shadow-md bg-white flex flex-col items-center relative h-full swiper-slide1">
+                <Link to={`/categories/${category.title.toLowerCase().replace(" ", "-")}`} className="max-w-xs p-4 border rounded-lg shadow-md bg-white flex flex-col items-center relative h-full swiper-slide1">
                   <img src={category.image_url} alt="Drugs" className="mb-4" />
                   <h2 className="md:text-md lg:text-lg text-sm font-semibold mb-2">
                     {category.title}

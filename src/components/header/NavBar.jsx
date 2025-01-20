@@ -2,11 +2,11 @@ import { Avatar, Badge, Dropdown, Navbar } from "flowbite-react";
 import { useState } from "react";
 import { GrCart } from "react-icons/gr";
 import CartSiteBar from "./CartSideBar";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const NavBar = () => {
   // demo
-  let user = true;
+  let user = false;
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -18,7 +18,10 @@ const NavBar = () => {
     <>
       <Navbar.Collapse>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
-          Home
+          <NavLink to={'/'}>Home</NavLink>
+        </Navbar.Link>
+        <Navbar.Link href="#" className="font-semibold text-[#164193]">
+          <NavLink to='/categories'>Categories</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
           Shop
