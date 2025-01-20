@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import registerAnimation from "../../../../public/json/register.json";
 import Lottie from "lottie-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 
 const Register = ({ handleSubmitRegister }) => {
+
+  // using custom hook..........
+  let {setUser, registerWithEmail, updateUserProfile, handleError} = AuthProviderHook();
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -59,6 +65,35 @@ const Register = ({ handleSubmitRegister }) => {
     );
   };
 
+  // confirm registration
+  const handleRegistrationForm = (event)=>{
+    event.preventDefault();
+
+
+    // form data collect
+    let form = event.target;
+    let name = form.name.value;
+    let email = form.email.value;
+    let photoUrl = form.photoUrl.value;
+    let password = form.password.value;
+
+    console.log(name, email, photoUrl, password)
+
+    registerWithEmail(email, password)
+    .then(result=>{
+      setUser(result.user);
+      updateUserProfile({displayName:name, photoURL:photoUrl})
+      .then(()=>{
+        navigate('/');
+        alert('register successful');
+      }).catch(handleError)
+    }).catch(handleError)
+
+
+
+
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#164193] to-[#00a9ff] md:px-4 py-10">
       <div className="flex flex-col md:flex-row bg-[#AAF0F0] rounded-lg shadow-lg max-w-5xl">
@@ -75,7 +110,7 @@ const Register = ({ handleSubmitRegister }) => {
           <h2 className="text-3xl font-bold text-center text-[#164193] mb-6">
             Sign Up
           </h2>
-          <form>
+          <form onSubmit={handleRegistrationForm}>
             {/* Name Field */}
             <div className="mb-4">
               <label
