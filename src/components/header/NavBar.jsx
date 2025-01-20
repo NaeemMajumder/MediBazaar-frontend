@@ -40,7 +40,7 @@ const NavBar = () => {
           <NavLink to='/categories'>Categories</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
-          Shop
+        <NavLink to='/shop'>Shop</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
           Language

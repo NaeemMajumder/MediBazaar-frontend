@@ -73,7 +73,7 @@ const categories = [
 const AllCategories = () => {
   return (
     <div className="bg-[#f3f3f3] py-16 px-4">
-      <h1 className="text-center text-3xl lg:text-4xl text-[#164193] font-semibold mb-12">
+      <h1 className="text-center text-3xl lg:text-4xl text-[#164193] font-semibold mb-12 heading">
         Explore Our Categories
       </h1>
 

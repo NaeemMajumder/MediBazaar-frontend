@@ -7,6 +7,8 @@ import Register from "../components/main/authForm/Register";
 import AllCategories from "../components/main/allCategories/allCategories";
 import CategoryData from "../components/main/categoryData/CategoryData";
 import MyProfile from "../components/main/myProfile/MyProfile";
+import Shop from "../components/main/shop/Shop";
+import CartPage from "../components/main/cart/CartPage";
 
 export const Router = createBrowserRouter([
     {
@@ -33,6 +35,14 @@ export const Router = createBrowserRouter([
             {
                 path:"categories",
                 element:<AllCategories/>
+            },
+            {
+                path:"shop",
+                element:<Shop/>
+            },
+            {
+                path:"cartDetails",
+                element:<CartPage/>
             },
             {
                 path:"/categories/:category",
