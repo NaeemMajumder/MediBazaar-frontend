@@ -2,17 +2,33 @@ import { Avatar, Badge, Dropdown, Navbar } from "flowbite-react";
 import { useState } from "react";
 import { GrCart } from "react-icons/gr";
 import CartSiteBar from "./CartSideBar";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import AuthProviderHook from "../../customHooks/AuthProviderHook";
 
 const NavBar = () => {
-  // demo
-  let user = false;
+
+  let {user, setUser, signOutUser, handleError} = AuthProviderHook();
+  const navigate = useNavigate();
+
+  console.log(user);
+
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  // signout function
+  const handleSignOut = ()=>{
+    signOutUser()
+    .then(()=>{
+      setUser(null);
+      navigate("/login");
+      alert("signout successful");
+    }).catch(handleError)
+  }
+
 
   let links = (
     <>
@@ -68,28 +84,28 @@ const NavBar = () => {
 
           {/* --------------------- */}
 
-          {user ? (
+          {user?.email ? (
             <Dropdown
               arrowIcon={false}
               inline
               label={
                 <Avatar
                   alt="User settings"
-                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  img={user?.photoURL}
                   rounded
                 />
               }
             >
               <Dropdown.Header>
-                <span className="block text-sm">Bonnie Green</span>
+                <span className="block text-sm">{user?.displayName}</span>
                 <span className="block truncate text-sm font-medium">
-                  name@flowbite.com
+                  {user?.email}
                 </span>
               </Dropdown.Header>
               <Dropdown.Item>Dashboard</Dropdown.Item>
-              <Dropdown.Item>Update Profile</Dropdown.Item>
+              <Dropdown.Item><Link to="/myProfile">Update Profile</Link></Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item>Sign out</Dropdown.Item>
+              <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
             <button className="relative px-5 text-md font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-green-500 rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-50">

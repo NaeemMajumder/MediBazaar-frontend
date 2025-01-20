@@ -23,36 +23,43 @@ const AuthProvider = ({ children }) => {
 
   // google registration
   const registerWithGoogle = () => {
+    setLoading(true)
     return signInWithPopup(auth, googleProvider);
   };
 
   // facebook registration
   const registerWithFacebook = () => {
+    setLoading(true)
     return signInWithPopup(auth, facebookProvider);
   };
 
   // gitHub registration
   const registerWithGitHub = () => {
+    setLoading(true)
     return signInWithPopup(auth, gitHubProvider);
   };
 
   // E-mail registration
   const registerWithEmail = (email, password) => {
+    setLoading(true)
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   // SignIn / Login
   const signInUser = (email, password) => {
+    setLoading(true)
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   // SignOut / Logout
   const signOutUser = () => {
+    setLoading(true)
     return signOut(auth);
   };
 
   // update user profile
   const updateUserProfile = (updatedData) => {
+    setLoading(true)
     return updateProfile(auth.currentUser, updatedData);
   };
 

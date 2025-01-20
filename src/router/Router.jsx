@@ -6,6 +6,7 @@ import Login from "../components/main/authForm/Login";
 import Register from "../components/main/authForm/Register";
 import AllCategories from "../components/main/allCategories/allCategories";
 import CategoryData from "../components/main/categoryData/CategoryData";
+import MyProfile from "../components/main/myProfile/MyProfile";
 
 export const Router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ export const Router = createBrowserRouter([
             {
                 path:"Register",
                 element:<Register/>
+            },
+            {
+                path:"myProfile",
+                element:<MyProfile/>
             },
             {
                 path:"categories",

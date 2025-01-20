@@ -4,16 +4,27 @@ import loginAnimation from "../../../../public/json/login.json";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   loadCaptchaEnginge,
   LoadCanvasTemplate,
   validateCaptcha,
 } from "react-simple-captcha";
+import AuthProviderHook from "../../../customHooks/AuthProviderHook";
+import { PiAppWindow } from "react-icons/pi";
 
 const Login = () => {
   // login validate captcha
   let [disable, setDisable] = useState(true);
+
+  let {
+    setUser,
+    signInUser,
+    handleError,
+    registerWithGoogle,
+    registerWithFacebook,
+  } = AuthProviderHook();
+  const navigate = useNavigate();
 
   // useEffect captcha
   useEffect(() => {
@@ -33,10 +44,41 @@ const Login = () => {
     }
   };
 
-  //   login form validation
+  // login form validation
   let handleLoginFrom = (event) => {
     event.preventDefault();
-    console.log("form submitted");
+
+    // form data
+    let form = event.target;
+    let email = form.email.value;
+    let password = form.password.value;
+
+    signInUser(email, password)
+      .then((result) => {
+        setUser(result.user);
+        navigate("/");
+      })
+      .catch(handleError);
+  };
+
+  // login facebook
+  let handleFacebookLogin = () => {
+    registerWithFacebook()
+      .then((result) => {
+        setUser(result.user);
+        navigate("/");
+      })
+      .catch(handleError);
+  };
+
+  // login google
+  let handleGoogleLogin = () => {
+    registerWithGoogle()
+      .then((result) => {
+        setUser(result.user);
+        navigate("/");
+      })
+      .catch(handleError);
   };
 
   return (
@@ -100,11 +142,12 @@ const Login = () => {
                 />
                 <button
                   onClick={handleValidateCaptcha}
-                  className={`px-4 py-2 ${disable?'bg-red-500':'bg-[#1ca288] hover:bg-[#0d705f]'} text-white font-medium rounded-lg  transition duration-300`}
+                  type="button"
+                  className={`px-4 py-2 ${
+                    disable ? "bg-red-500" : "bg-[#1ca288] hover:bg-[#0d705f]"
+                  } text-white font-medium rounded-lg  transition duration-300`}
                 >
-                  {
-                    disable?"Validate":"✔"
-                  }
+                  {disable ? "Validate" : "✔"}
                 </button>
               </div>
               <div className="text-sm mt-1">
@@ -117,21 +160,25 @@ const Login = () => {
 
             <button
               type="submit"
-              className={`w-full py-2 text-white font-bold ${disable?'bg-gray-600':'bg-[#00B092] hover:bg-[#1ca288]'} rounded-lg  transition duration-300 mb-4`}
+              className={`w-full py-2 text-white font-bold ${
+                disable ? "bg-gray-600" : "bg-[#00B092] hover:bg-[#1ca288]"
+              } rounded-lg  transition duration-300 mb-4`}
               disabled={disable}
             >
-              Login 
+              Login
             </button>
 
             {/* Social Login Buttons */}
             <div className="flex justify-center gap-4">
               <button
+                onClick={handleFacebookLogin}
                 type="button"
                 className="w-12 h-12 text-2xl border border-blue-500 text-blue-500 bg-white rounded-full flex items-center justify-center  transition duration-300 hover:bg-blue-100"
               >
                 <SiFacebook />
               </button>
               <button
+                onClick={handleGoogleLogin}
                 type="button"
                 className="w-12 h-12 text-2xl border border-red-500 bg-white rounded-full flex items-center justify-center  transition duration-300 hover:bg-red-100"
               >
