@@ -10,8 +10,6 @@ const NavBar = () => {
   let {user, setUser, signOutUser, handleError} = AuthProviderHook();
   const navigate = useNavigate();
 
-  console.log(user);
-
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
