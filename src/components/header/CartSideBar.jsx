@@ -2,8 +2,6 @@ import { BiCut } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
 const CartSiteBar = ({ isSidebarOpen, toggleSidebar, cartData }) => {
-  
-
   return (
     <>
       {/* Sidebar */}
@@ -30,7 +28,7 @@ const CartSiteBar = ({ isSidebarOpen, toggleSidebar, cartData }) => {
           </button>
 
           {/* Sidebar Content */}
-          <div className="p-6">
+          <div className="p-6 h-full flex flex-col">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white">
               Your Cart
             </h2>
@@ -38,8 +36,8 @@ const CartSiteBar = ({ isSidebarOpen, toggleSidebar, cartData }) => {
               You have {cartData?.length} items in your cart.
             </p>
 
-            {/* Cart Items */}
-            <div className="mt-4 space-y-4">
+            {/* Cart Items with Scroll */}
+            <div className="mt-4 space-y-4 overflow-y-auto max-h-[70vh] pr-2">
               {cartData?.map((item, index) => (
                 <div
                   key={index}
@@ -55,7 +53,7 @@ const CartSiteBar = ({ isSidebarOpen, toggleSidebar, cartData }) => {
                       {item.productName}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                      Price: {item.productPrice} 
+                      Price: {item.productPrice}
                     </p>
                   </div>
                 </div>
@@ -64,8 +62,7 @@ const CartSiteBar = ({ isSidebarOpen, toggleSidebar, cartData }) => {
 
             {/* Actions */}
             <div className="mt-6">
-              <Link to="/cartDetails">
-                {" "}
+              <Link to="/dashboard/cartDetails">
                 <button
                   className="w-full py-2 text-white bg-blue-700 rounded hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >

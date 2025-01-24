@@ -11,57 +11,65 @@ import Shop from "../components/main/shop/Shop";
 import CartPage from "../components/main/cart/CartPage";
 import Checkout from "../components/main/checkoutPage/Checkout";
 import InvoicePage from "../components/main/invoicePage/InvoicePage";
+import DashBoard from "../components/main/dashboard/DashBoard";
 
 export const Router = createBrowserRouter([
-    {
-        path:"/",
-        element:<App />,
-        errorElement: <Error/>,
-        children:[
-            {
-                path:"/",
-                element:<Main/>
-            },
-            {
-                path:"login",
-                element:<Login/>
-            },
-            {
-                path:"Register",
-                element:<Register/>
-            },
-            {
-                path:"myProfile",
-                element:<MyProfile/>
-            },
-            {
-                path:"categories",
-                element:<AllCategories/>
-            },
-            {
-                path:"shop",
-                element:<Shop/>
-            },
-            {
-                path:"cartDetails",
-                element:<CartPage/>
-            },
-            {
-                path:"checkout",
-                element:<Checkout/>
-            },
-            {
-                path:"invoice",
-                element:<InvoicePage/>
-            },
-            {
-                path:"/categories/:category",
-                element:<CategoryData/>
-            },
-        ]
-    },
-    {
-        path:"*",
-        element: <Error />
-    }
-])
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/",
+        element: <Main />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "Register",
+        element: <Register />,
+      },
+      {
+        path: "myProfile",
+        element: <MyProfile />,
+      },
+      {
+        path: "categories",
+        element: <AllCategories />,
+      },
+      {
+        path: "shop",
+        element: <Shop />,
+      },
+      {
+        path: "dashboard",
+        element: <DashBoard />,
+        children: [
+          {
+            path: "cartDetails",
+            element: <CartPage />,
+          },
+        ],
+      },
+
+      {
+        path: "checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "invoice",
+        element: <InvoicePage />,
+      },
+      {
+        path: "/categories/:category",
+        element: <CategoryData />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <Error />,
+  },
+]);

@@ -100,7 +100,7 @@ const NavBar = () => {
                   {user?.email}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item>Dashboard</Dropdown.Item>
+              <Dropdown.Item><Link to={"/dashboard"}>Dashboard</Link></Dropdown.Item>
               <Dropdown.Item>
                 <Link to="/myProfile">Update Profile</Link>
               </Dropdown.Item>
