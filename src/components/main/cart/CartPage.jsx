@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UseCart from "../../../customHooks/UseCart";
 
 const CartPage = () => {
   const navigate = useNavigate();
+  let [,cartData] = UseCart();
+  console.log(cartData);
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -73,18 +76,18 @@ const CartPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cartItems.map((item) => (
+                  {cartData?.map((item) => (
                     <tr key={item.id} className="text-center">
                       <td className="p-2 border">
                         <img
-                          src={item.image}
-                          alt={item.name}
+                          src={item.productImg}
+                          alt={item.productName}
                           className="w-12 h-12 object-cover mx-auto"
                         />
                       </td>
-                      <td className="p-2 border">{item.name}</td>
-                      <td className="p-2 border">{item.company}</td>
-                      <td className="p-2 border">${item.price}</td>
+                      <td className="p-2 border">{item.productName}</td>
+                      <td className="p-2 border">{item.productCategory}</td>
+                      <td className="p-2 border">{item.productPrice}</td>
                       <td className="p-2 border flex justify-center items-center">
                         <button
                           onClick={() => decreaseQuantity(item.id)}

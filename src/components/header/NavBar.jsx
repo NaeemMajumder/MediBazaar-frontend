@@ -4,12 +4,13 @@ import { GrCart } from "react-icons/gr";
 import CartSiteBar from "./CartSideBar";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import AuthProviderHook from "../../customHooks/AuthProviderHook";
+import UseCart from "../../customHooks/UseCart";
 
 const NavBar = () => {
-
-  let {user, setUser, signOutUser, handleError} = AuthProviderHook();
+  let { user, setUser, signOutUser, handleError } = AuthProviderHook();
+  const [,cartData] = UseCart();
+  // console.log(cartData)
   const navigate = useNavigate();
-
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -18,27 +19,27 @@ const NavBar = () => {
   };
 
   // signout function
-  const handleSignOut = ()=>{
+  const handleSignOut = () => {
     signOutUser()
-    .then(()=>{
-      setUser(null);
-      navigate("/login");
-      alert("signout successful");
-    }).catch(handleError)
-  }
-
+      .then(() => {
+        setUser(null);
+        navigate("/login");
+        alert("signout successful");
+      })
+      .catch(handleError);
+  };
 
   let links = (
     <>
       <Navbar.Collapse>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
-          <NavLink to={'/'}>Home</NavLink>
+          <NavLink to={"/"}>Home</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
-          <NavLink to='/categories'>Categories</NavLink>
+          <NavLink to="/categories">Categories</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
-        <NavLink to='/shop'>Shop</NavLink>
+          <NavLink to="/shop">Shop</NavLink>
         </Navbar.Link>
         <Navbar.Link href="#" className="font-semibold text-[#164193]">
           Language
@@ -67,9 +68,11 @@ const NavBar = () => {
             className="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             <GrCart className="w-6 h-6" />
-            <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-700 border-2 border-white rounded-full -top-1 -right-1 dark:border-gray-900">
-              7
-            </div>
+            {cartData && (
+              <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-700 border-2 border-white rounded-full -top-1 -right-1 dark:border-gray-900">
+                {cartData?.length}
+              </div>
+            )}
           </button>
 
           <>
@@ -77,6 +80,7 @@ const NavBar = () => {
               isSidebarOpen={isSidebarOpen}
               setIsSidebarOpen={setIsSidebarOpen}
               toggleSidebar={toggleSidebar}
+              cartData={cartData}
             />
           </>
 
@@ -87,11 +91,7 @@ const NavBar = () => {
               arrowIcon={false}
               inline
               label={
-                <Avatar
-                  alt="User settings"
-                  img={user?.photoURL}
-                  rounded
-                />
+                <Avatar alt="User settings" img={user?.photoURL} rounded />
               }
             >
               <Dropdown.Header>
@@ -101,7 +101,9 @@ const NavBar = () => {
                 </span>
               </Dropdown.Header>
               <Dropdown.Item>Dashboard</Dropdown.Item>
-              <Dropdown.Item><Link to="/myProfile">Update Profile</Link></Dropdown.Item>
+              <Dropdown.Item>
+                <Link to="/myProfile">Update Profile</Link>
+              </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
             </Dropdown>

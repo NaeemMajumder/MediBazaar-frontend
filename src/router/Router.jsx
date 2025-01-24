@@ -9,6 +9,8 @@ import CategoryData from "../components/main/categoryData/CategoryData";
 import MyProfile from "../components/main/myProfile/MyProfile";
 import Shop from "../components/main/shop/Shop";
 import CartPage from "../components/main/cart/CartPage";
+import Checkout from "../components/main/checkoutPage/Checkout";
+import InvoicePage from "../components/main/invoicePage/InvoicePage";
 
 export const Router = createBrowserRouter([
     {
@@ -43,6 +45,14 @@ export const Router = createBrowserRouter([
             {
                 path:"cartDetails",
                 element:<CartPage/>
+            },
+            {
+                path:"checkout",
+                element:<Checkout/>
+            },
+            {
+                path:"invoice",
+                element:<InvoicePage/>
             },
             {
                 path:"/categories/:category",
