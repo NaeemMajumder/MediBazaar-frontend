@@ -1,76 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 
-const categories = [
-  {
-    title: "OTC Medicine",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fdrugs.png&w=96&q=75",
-  },
-  {
-    title: "Women's Choice",
-    stock: 24,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fwoman.png&w=96&q=75",
-  },
-  {
-    title: "Sexual Wellness",
-    stock: 14,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fcontraceptive.png&w=96&q=75",
-  },
-  {
-    title: "Diabetic Care",
-    stock: 67,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2FDiabetics-Care.png&w=96&q=75",
-  },
-  {
-    title: "Baby Care",
-    stock: 23,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fbaby-boy.png&w=96&q=75",
-  },
-  {
-    title: "Dental Care",
-    stock: 87,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fteeth.png&w=96&q=75",
-  },
-  {
-    title: "Supplement",
-    stock: 75,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fsupplement.png&w=96&q=75",
-  },
-  {
-    title: "Diapers",
-    stock: 23,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fdiaper.png&w=96&q=75",
-  },
-  {
-    title: "Personal Care",
-    stock: 55,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2FPersonal-Care.png&w=96&q=75",
-  },
-  {
-    title: "Devices",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fglucosemeter_NutCdvY.png&w=96&q=75",
-  },
-  {
-    title: "Prescription Medicine",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fmedical-prescription.png&w=96&q=75",
-  },
-];
 
 const AllCategories = () => {
+
+  let [categories, setCategories] = useState([]);
+
+  const axiosPublic = UseAxiosPublic();
+
+  useEffect(()=>{
+    axiosPublic.get('/categories')
+    .then(res=>{
+      console.log(res.data);
+      setCategories(res.data);
+    })
+  },[])
+
+
   return (
     <div className="bg-[#f3f3f3] py-16 px-4">
       <h1 className="text-center text-3xl lg:text-4xl text-[#164193] font-semibold mb-12 heading">

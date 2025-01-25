@@ -13,6 +13,7 @@ import Checkout from "../components/main/checkoutPage/Checkout";
 import InvoicePage from "../components/main/invoicePage/InvoicePage";
 import DashBoard from "../components/main/dashboard/DashBoard";
 import ManageUsers from "../components/main/dashboard/adminDesh/ManageUsers";
+import ManageCategory from "../components/main/dashboard/adminDesh/ManageCategory";
 
 export const Router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ export const Router = createBrowserRouter([
           {
             path: "manageUsers",
             element: <ManageUsers />,
+          },
+          {
+            path: "manageCategory",
+            element: <ManageCategory />,
           },
         ],
       },
