@@ -1,86 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CategoryKit from "./CategoryKit";
+import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 
-const categories = [
-  {
-    title: "OTC Medicine",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fdrugs.png&w=96&q=75",
-  },
-  {
-    title: "Women's Choice",
-    stock: 24,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fwoman.png&w=96&q=75",
-  },
-  {
-    title: "Sexual Wellness",
-    stock: 14,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fcontraceptive.png&w=96&q=75",
-  },
-  {
-    title: "Diabetic Care",
-    stock: 67,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2FDiabetics-Care.png&w=96&q=75",
-  },
-  {
-    title: "Baby Care",
-    stock: 23,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fbaby-boy.png&w=96&q=75",
-  },
-  {
-    title: "Dental Care",
-    stock: 87,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fteeth.png&w=96&q=75",
-  },
-  {
-    title: "Supplement",
-    stock: 75,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fsupplement.png&w=96&q=75",
-  },
-  {
-    title: "Diapers",
-    stock: 23,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fdiaper.png&w=96&q=75",
-  },
-  {
-    title: "Personal Care",
-    stock: 55,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2FPersonal-Care.png&w=96&q=75",
-  },
-  {
-    title: "Devices",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fglucosemeter_NutCdvY.png&w=96&q=75",
-  },
-  {
-    title: "Prescription Medicine",
-    stock: 12,
-    image_url:
-      "https://medeasy.health/_next/image?url=https%3A%2F%2Fapi.medeasy.health%2Fmedia%2Fmedicines%2Fcategories%2Fmedical-prescription.png&w=96&q=75",
-  },
-];
 
 const CategoryData = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState("");
+  const [medicines, setMedicines] = useState([])
+
+  const [categories,setCategories] = useState([])
+
+  const axiosPublic =UseAxiosPublic();
+
+  useEffect(()=>{
+    axiosPublic.get('/categories')
+    .then(res=>{
+      setCategories(res.data);
+    })
+  },[])
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCategoryClick = (index) => {
-    setActiveCategory(index);
+  const handleCategoryClick = (category) => {
+
+    setActiveCategory(category)
+    console.log(category);
+    axiosPublic.get(`/medicine?category=${category}`)
+    .then(res=>{
+      setMedicines(res.data);
+    })
   };
 
   return (
@@ -116,9 +68,9 @@ const CategoryData = () => {
                     .replace(" ", "-")}`}
                 >
                   <li
-                    onClick={() => handleCategoryClick(index)}
+                    onClick={() => handleCategoryClick(category.title)}
                     className={`flex items-center p-4 rounded-lg cursor-pointer transition ${
-                      activeCategory === index
+                      activeCategory === category.title
                         ? "bg-[#164193] text-white"
                         : "bg-gray-100 text-[#164193]"
                     }`}
@@ -158,7 +110,7 @@ const CategoryData = () => {
               All Categories
             </button>
           </div>
-          <CategoryKit />
+          <CategoryKit medicines={medicines} category={activeCategory}/>
         </div>
       </section>
     </>

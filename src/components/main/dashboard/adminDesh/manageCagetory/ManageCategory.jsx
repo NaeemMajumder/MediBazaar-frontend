@@ -36,7 +36,7 @@ const ManageCategory = () => {
             </button>
 
             {showPopup && (
-              <AddCategory onClose={() => setShowPopup(false)} />
+              <AddCategory setShowPopup={setShowPopup} onClose={() => setShowPopup(false)} />
             )}
           </>
         </div>
@@ -56,7 +56,7 @@ const ManageCategory = () => {
                     <img
                       src={category.image_url}
                       alt={category.title}
-                      className="w-12 h-12 rounded-full mx-auto object-cover"
+                      className="w-12 h-12 rounded-2xl mx-auto object-cover"
                     />
                   </td>
                   <td className="p-3 border">{category.title}</td>

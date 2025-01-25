@@ -15,7 +15,7 @@ const CartPage = () => {
 
   // Calculate total items and total price
   const totalPrice = cartData?.reduce(
-    (total, item) => total + item.productPrice,
+    (total, item) => total + parseInt(item.productPrice),
     0
   );
 

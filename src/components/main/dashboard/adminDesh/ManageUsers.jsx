@@ -1,12 +1,14 @@
 import React from "react";
 import UseAxiosSecure from "../../../../customHooks/UseAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UseCart from "../../../../customHooks/UseCart";
 // import { Button } from "@/components/ui/button";
 
 const ManageUsers = () => {
   const axiosSecure = UseAxiosSecure();
   const [refetch] = UseCart();
+  const queryClient = useQueryClient();
+
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -19,7 +21,8 @@ const ManageUsers = () => {
   const updateUserRole = (id, role, email) => {
     axiosSecure.patch(`/user/${id}`, { role }).then((res) => {
       if (res.data.modifiedCount > 0) {
-          refetch();
+        queryClient.invalidateQueries({ queryKey: ['users'] })
+        refetch();
         alert(`${email} is ${role} now`);
       }
     });
