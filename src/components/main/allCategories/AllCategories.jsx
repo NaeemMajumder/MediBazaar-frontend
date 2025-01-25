@@ -12,7 +12,6 @@ const AllCategories = () => {
   useEffect(()=>{
     axiosPublic.get('/categories')
     .then(res=>{
-      console.log(res.data);
       setCategories(res.data);
     })
   },[])
