@@ -12,6 +12,7 @@ import CartPage from "../components/main/cart/CartPage";
 import Checkout from "../components/main/checkoutPage/Checkout";
 import InvoicePage from "../components/main/invoicePage/InvoicePage";
 import DashBoard from "../components/main/dashboard/DashBoard";
+import ManageUsers from "../components/main/dashboard/adminDesh/ManageUsers";
 
 export const Router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ export const Router = createBrowserRouter([
           {
             path: "cartDetails",
             element: <CartPage />,
+          },
+          {
+            path: "manageUsers",
+            element: <ManageUsers />,
           },
         ],
       },

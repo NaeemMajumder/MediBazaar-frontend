@@ -12,10 +12,12 @@ import {
 } from "react-simple-captcha";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import { PiAppWindow } from "react-icons/pi";
+import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 
 const Login = () => {
   // login validate captcha
   let [disable, setDisable] = useState(true);
+  let axiosPublic = UseAxiosPublic();
 
   let {
     setUser,
@@ -75,8 +77,16 @@ const Login = () => {
   let handleGoogleLogin = () => {
     registerWithGoogle()
       .then((result) => {
-        setUser(result.user);
-        navigate("/");
+        let userInfo = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photoUrl: result.user.photoURL,
+        };
+
+        axiosPublic.post("/user", userInfo).then((res) => {
+          setUser(result.user);
+          navigate("/");
+        });
       })
       .catch(handleError);
   };

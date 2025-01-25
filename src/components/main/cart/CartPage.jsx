@@ -35,6 +35,14 @@ const CartPage = () => {
     });
   };
 
+  const allItemDelete = ()=>{
+    axiosSecure.delete(`/cartDetails`)
+    .then(res=>{
+      alert("all item deleted");
+      refetch();
+    })
+  }
+
   return (
     <>
       <section className="py-10">
@@ -97,7 +105,7 @@ const CartPage = () => {
               </div>
 
               <div className="flex justify-between mt-4">
-                <button className="bg-red-500 text-white px-4 py-2 rounded-md">
+                <button onClick={allItemDelete} className="bg-red-500 text-white px-4 py-2 rounded-md">
                   Clear Cart
                 </button>
                 <button className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300">

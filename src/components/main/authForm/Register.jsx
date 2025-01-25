@@ -3,12 +3,14 @@ import registerAnimation from "../../../../public/json/register.json";
 import Lottie from "lottie-react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
+import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 
 const Register = ({ handleSubmitRegister }) => {
-
   // using custom hook..........
-  let {setUser, registerWithEmail, updateUserProfile, handleError} = AuthProviderHook();
-  const navigate = useNavigate()
+  let { setUser, registerWithEmail, updateUserProfile, handleError } =
+    AuthProviderHook();
+  const navigate = useNavigate();
+  const axiosPublic = UseAxiosPublic();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -66,9 +68,8 @@ const Register = ({ handleSubmitRegister }) => {
   };
 
   // confirm registration
-  const handleRegistrationForm = (event)=>{
+  const handleRegistrationForm = (event) => {
     event.preventDefault();
-
 
     // form data collect
     let form = event.target;
@@ -77,32 +78,37 @@ const Register = ({ handleSubmitRegister }) => {
     let photoUrl = form.photoUrl.value;
     let password = form.password.value;
 
-    console.log(name, email, photoUrl, password)
+    console.log(name, email, photoUrl, password);
 
     registerWithEmail(email, password)
-    .then(result=>{
-      setUser(result.user);
-      updateUserProfile({displayName:name, photoURL:photoUrl})
-      .then(()=>{
-        navigate('/');
-        alert('register successful');
-      }).catch(handleError)
-    }).catch(handleError)
+      .then((result) => {
+        setUser(result.user);
+        updateUserProfile({ displayName: name, photoURL: photoUrl })
+          .then(() => {
+            let userInfo = {
+              name,
+              email,
+              photoUrl,
+            };
 
-
-
-
-  }
+            axiosPublic.post("/user", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                navigate("/");
+                alert("register successful");
+              }
+            });
+          })
+          .catch(handleError);
+      })
+      .catch(handleError);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#164193] to-[#00a9ff] md:px-4 py-10">
       <div className="flex flex-col md:flex-row bg-[#AAF0F0] rounded-lg shadow-lg max-w-5xl">
         {/* Left: Image Section */}
         <div className="flex justify-center items-center">
-          <Lottie
-            className="w-full"
-            animationData={registerAnimation}
-          ></Lottie>
+          <Lottie className="w-full" animationData={registerAnimation}></Lottie>
         </div>
 
         {/* Right: Form Section */}
@@ -302,9 +308,11 @@ const Register = ({ handleSubmitRegister }) => {
             </div>
           </form>
           <div className="text-sm mt-3 text-center">
-                Already have an account?{" "}
-                <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
-              </div>
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
+          </div>
         </div>
       </div>
     </div>
