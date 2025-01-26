@@ -7,6 +7,20 @@ Welcome to **MediBazaar**, a multi-vendor medicine-selling e-commerce platform t
 
 ---
 
+# Quick Login
+
+You can quickly explore the website using the following login credentials:
+
+### Admin 
+#### Login:
+- Email: admin@gmail.com
+- Password: Admin1234#
+
+### Seller 
+#### Login:
+- Email: seller@gmail.com
+- Password: Seller1234#
+
 ## Features
 
 ### 1. User Authentication
