@@ -15,6 +15,7 @@ import DashBoard from "../components/main/dashboard/DashBoard";
 import ManageUsers from "../components/main/dashboard/adminDesh/ManageUsers";
 import ManageCategory from "../components/main/dashboard/adminDesh/manageCagetory/ManageCategory";
 import ManageMedicines from "../components/main/dashboard/sellerDesh/manageMedicine/ManageMedicines";
+import ManagePayment from "../components/main/dashboard/adminDesh/managePayment.jsx/ManagePayment";
 
 export const Router = createBrowserRouter([
   {
@@ -73,6 +74,12 @@ export const Router = createBrowserRouter([
           {
             path: "paymentHistory",
             element: <InvoicePage />,
+          },
+
+          // admin
+          {
+            path: "paymentManagement",
+            element: <ManagePayment />,
           },
         ],
       },

@@ -20,14 +20,13 @@ import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 
 const Dashboard = () => {
-  let [isRole, setIsRole] = useState("user");
+  let [isRole, setIsRole] = useState('');
   let { user } = AuthProviderHook();
   const axiosSecure = UseAxiosSecure();
 
   useEffect(() => {
     axiosSecure.get(`/user?email=${user?.email}`).then((res) => {
-      console.log(res.data[0].isRole);
-      setIsRole(res.data[0].isRole);
+      setIsRole(res.data[0]?.isRole);
     });
   }, []);
 
