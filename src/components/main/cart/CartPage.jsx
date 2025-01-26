@@ -4,6 +4,7 @@ import UseCart from "../../../customHooks/UseCart";
 import { TiDeleteOutline } from "react-icons/ti";
 import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
 import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const CartPage = () => {
   const handleItemDelete = () => {
     axiosSecure.delete(`/cartDetails/${selectedItemId}`).then((res) => {
       if (res.data.deletedCount) {
-        alert("Item deleted successfully!");
+        toast.success("Item deleted successfully!");
         refetch();
       }
       setShowPopup(false);
@@ -38,7 +39,7 @@ const CartPage = () => {
 
   const allItemDelete = () => {
     axiosSecure.delete(`/cartDetails`).then((res) => {
-      alert("all item deleted");
+      toast.success("all item deleted");
       refetch();
     });
   };

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
 
 const MyProfile = () => {
   let { user, setUser, updateUserProfile } = AuthProviderHook();
@@ -22,7 +23,7 @@ const MyProfile = () => {
       displayName: updatedName,
       photoURL: updatedPhotoURL,
     }).then(() => {
-      alert("Profile updated successfully! Your changes have been saved.");
+      toast.success("Profile updated successfully! Your changes have been saved.");
       navigate("/myProfile");
     });
 

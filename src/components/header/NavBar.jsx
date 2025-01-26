@@ -5,10 +5,11 @@ import CartSiteBar from "./CartSideBar";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import AuthProviderHook from "../../customHooks/AuthProviderHook";
 import UseCart from "../../customHooks/UseCart";
+import { toast } from "react-toastify";
 
 const NavBar = () => {
   let { user, setUser, signOutUser, handleError } = AuthProviderHook();
-  const [,cartData] = UseCart();
+  const [, cartData] = UseCart();
   // console.log(cartData)
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const NavBar = () => {
       .then(() => {
         setUser(null);
         navigate("/login");
-        alert("signout successful");
+        toast.success("signout successful");
       })
       .catch(handleError);
   };
@@ -62,18 +63,22 @@ const NavBar = () => {
         </Navbar.Brand>
         <div className="flex gap-2 md:order-2">
           {/* shopping cart */}
-          <button
-            onClick={toggleSidebar}
-            type="button"
-            className="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            <GrCart className="w-6 h-6" />
-            {cartData && (
-              <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-700 border-2 border-white rounded-full -top-1 -right-1 dark:border-gray-900">
-                {cartData?.length}
-              </div>
-            )}
-          </button>
+          {user?.email && (
+            <>
+              <button
+                onClick={toggleSidebar}
+                type="button"
+                className="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-blue-700 rounded-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <GrCart className="w-6 h-6" />
+                {cartData && (
+                  <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-700 border-2 border-white rounded-full -top-1 -right-1 dark:border-gray-900">
+                    {cartData?.length}
+                  </div>
+                )}
+              </button>
+            </>
+          )}
 
           <>
             <CartSiteBar
@@ -100,7 +105,9 @@ const NavBar = () => {
                   {user?.email}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item><Link to={"/dashboard/cartDetails"}>Dashboard</Link></Dropdown.Item>
+              <Dropdown.Item>
+                <Link to={"/dashboard/cartDetails"}>Dashboard</Link>
+              </Dropdown.Item>
               <Dropdown.Item>
                 <Link to="/myProfile">Update Profile</Link>
               </Dropdown.Item>

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
 import UseCart from "../../../customHooks/UseCart";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ product }) => {
   let { user } = AuthProviderHook();
@@ -26,10 +27,11 @@ const ProductCard = ({ product }) => {
         if (res.data.insertedId) {
           // refetch will update the cart... like because of this we do not need to use specific state variable to re-render again.
           refetch();
+          toast.success("item added to cart")
         }
       });
     } else {
-      alert("login first");
+      toast.error("login first");
       navigate("/login");
     }
   };

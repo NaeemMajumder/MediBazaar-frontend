@@ -5,6 +5,7 @@ import UseCart from "../../../customHooks/UseCart";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import moment from "moment/moment";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -73,7 +74,7 @@ const CheckoutForm = () => {
     } else {
       console.log("PaymentMethod created:", paymentIntent);
       if (paymentIntent.status === "succeeded") {
-        alert("your payment is completed");
+        toast.success("your payment is completed");
         console.log(moment().format("YYYY-MM-DD HH:mm:ss"));
 
         const payment = {
@@ -90,7 +91,7 @@ const CheckoutForm = () => {
         axiosSecure.post("/payments", payment).then((res) => {
           if (res.data?.result?.insertedId) {
             refetch();
-            alert("complete payment insert");
+            toast.success("complete payment");
             navigate('/dashboard/paymentHistory')
           }
         });

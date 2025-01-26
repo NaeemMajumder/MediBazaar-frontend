@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import UseCart from "../../../customHooks/UseCart";
+import { toast } from "react-toastify";
 
 const CategoryKit = ({ medicines, category }) => {
   const [selectedMedicine, setSelectedMedicine] = useState(null);
@@ -59,11 +60,11 @@ const CategoryKit = ({ medicines, category }) => {
       axiosSecure.post("/cartDetails", shoppingCartItems).then((res) => {
         if (res.data.insertedId) {
           refetch();
-          alert("Added to cart!");
+          toast.success("Added to cart!");
         }
       });
     } else {
-      alert("Please login first!");
+      toast.error("Please login first!");
       navigate("/login");
     }
   };

@@ -20,6 +20,7 @@ import AdminHome from "../components/main/dashboard/adminDesh/adminHome/AdminHom
 import SellsReport from "../components/main/dashboard/adminDesh/sellsReport/SellsReport";
 import ManageAds from "../components/main/dashboard/adminDesh/manageAds/ManageAds";
 import SellerHome from "../components/main/dashboard/sellerDesh/sellerHome/SellerHome";
+import PrivateRoute from "../provider/PrivateRouter";
 
 export const Router = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ export const Router = createBrowserRouter([
       },
       {
         path: "myProfile",
-        element: <MyProfile />,
+        element: <PrivateRoute><MyProfile /></PrivateRoute>,
       },
       {
         path: "categories",
@@ -53,53 +54,53 @@ export const Router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <DashBoard />,
+        element: <PrivateRoute><DashBoard /></PrivateRoute>,
         children: [
           {
             path: "cartDetails",
-            element: <CartPage />,
+            element: <PrivateRoute><CartPage /></PrivateRoute>,
           },
           {
             path: "manageUsers",
-            element: <ManageUsers />,
+            element: <PrivateRoute><ManageUsers /></PrivateRoute>,
           },
           {
             path: "manageCategory",
-            element: <ManageCategory />,
+            element: <PrivateRoute><ManageCategory /></PrivateRoute>,
           },
           {
             path: "manageMedicines",
-            element: <ManageMedicines />,
+            element: <PrivateRoute><ManageMedicines /></PrivateRoute>,
           },
           {
             path: "checkout",
-            element: <Checkout />,
+            element: <PrivateRoute><Checkout /></PrivateRoute>,
           },
           {
             path: "paymentHistory",
-            element: <InvoicePage />,
+            element: <PrivateRoute><InvoicePage /></PrivateRoute>,
           },
 
           // admin
           {
             path: "paymentManagement",
-            element: <ManagePayment />,
+            element: <PrivateRoute><ManagePayment /></PrivateRoute>,
           },
           {
             path: "adminHome",
-            element: <AdminHome />,
+            element: <PrivateRoute><AdminHome /></PrivateRoute>,
           },
           {
             path: "sellerHome",
-            element: <SellerHome />,
+            element: <PrivateRoute><SellerHome /></PrivateRoute>,
           },
           {
             path: "salesReport",
-            element: <SellsReport />,
+            element: <PrivateRoute><SellsReport /></PrivateRoute>,
           },
           {
             path: "manageBanner",
-            element: <ManageAds />,
+            element: <PrivateRoute><ManageAds /></PrivateRoute>,
           },
         ],
       },

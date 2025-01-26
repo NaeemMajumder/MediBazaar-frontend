@@ -6,6 +6,7 @@ import UseAxiosSecure from "../../../../../customHooks/UseAxiosSecure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UseCart from "../../../../../customHooks/UseCart";
 import { TiDeleteOutline } from "react-icons/ti";
+import { toast } from "react-toastify";
 
 const ManageMedicines = () => {
   const image_bb_url = `https://api.imgbb.com/1/upload?key=${
@@ -99,7 +100,7 @@ const ManageMedicines = () => {
 
       axiosSecure.post("/medicine", medicineData).then((res) => {
         if (res.data.insertedId) {
-          alert("item added");
+          toast.success("item added");
           setShowModal(false);
           setMedicineData([]);
           queryClient.invalidateQueries({ queryKey: ["medicines"] });
@@ -115,7 +116,7 @@ const ManageMedicines = () => {
     axiosSecure.delete(`/medicine/${id}`).then((res) => {
       console.log(res.data);
       if (res.data.deletedCount > 0) {
-        alert("item deleted");
+        toast.success("item deleted");
         queryClient.invalidateQueries({ queryKey: ["medicines"] });
         refetch();
       }

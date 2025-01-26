@@ -3,6 +3,7 @@ import UseAxiosSecure from "../../../../../customHooks/UseAxiosSecure";
 import UseCart from "../../../../../customHooks/UseCart";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UseAxiosPublic from "../../../../../customHooks/UseAxiosPublic";
+import { toast } from "react-toastify";
 
 const ManageAds = () => {
 
@@ -31,7 +32,7 @@ const ManageAds = () => {
     axiosSecure.delete(`/manageAds/${id}`).then((res) => {
       if (res.data.deletedCount > 0) {
         queryClient.invalidateQueries({ queryKey: ["banner"] });
-        alert("banner deleted")
+        toast.success("banner deleted")
         refetch();
       }
     });
@@ -53,7 +54,7 @@ const ManageAds = () => {
         const imageUrl = res.data.data.display_url;
         axiosSecure.post("/manageAds", { imageUrl }).then((res) => {
           if (res.data.insertedId) {
-            alert("banner added");
+            toast.success("banner added");
             queryClient.invalidateQueries({ queryKey: ["banner"] });
             refetch();
             setShowPopup(false);

@@ -1,25 +1,27 @@
-import React, { useContext } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { AuthContext } from './AuthProvider';
+import React, { useContext } from "react";
+import { AuthContext } from "./AuthProvider";
+import { Navigate, useLocation } from "react-router-dom";
 
-const PrivateRoute = ({children}) => {
+const PrivateRoute = ({ children }) => {
+  let { user, loading } = useContext(AuthContext);
+  let location = useLocation();
 
-    let {user, loading} = useContext(AuthContext);
-    let location = useLocation();
+  if (loading) {
+    return <span className="loading loading-spinner text-info"></span>;
+  }
 
-    if(loading){
-        return <span className="loading loading-spinner text-info"></span>;
+  if (user && user.email) {
+    return children;
+  }
+
+  return (
+    <>
+    {
+        console.log("not logged in")
     }
-
-    if(user && user.email){
-        return children;
-    }
-
-    return (
-        <>
-            <Navigate state={location.pathname} to="/account" ></Navigate>
-        </>
-    );
+      <Navigate state={location.pathname} to="/register"></Navigate>
+    </>
+  );
 };
 
 export default PrivateRoute;

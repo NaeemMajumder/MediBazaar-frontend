@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UseAxiosSecure from "../../../../../customHooks/UseAxiosSecure";
 import UseCart from "../../../../../customHooks/UseCart";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ManagePayment = () => {
   const [payments, setPayments] = useState([]);
@@ -25,7 +26,7 @@ const ManagePayment = () => {
   const handleAcceptPayment = (id) => {
     axiosSecure.patch(`/payments/${id}`, { status: "paid" }).then((res) => {
       navigate('/dashboard/paymentManagement');
-      alert("payment status changed")
+      toast.success("payment status changed")
     });
   };
 

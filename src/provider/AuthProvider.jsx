@@ -12,6 +12,7 @@ import {
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
 import UseAxiosPublic from "../customHooks/UseAxiosPublic";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -66,10 +67,10 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleError = (error) => {
-    alert(error.message);
+    toast.error(error.message);
   };
 
-  const authInfo = {
+  let authInfo = {
     user,
     setUser,
     loading,

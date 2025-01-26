@@ -2,6 +2,7 @@ import React from "react";
 import UseAxiosSecure from "../../../../customHooks/UseAxiosSecure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import UseCart from "../../../../customHooks/UseCart";
+import { toast } from "react-toastify";
 // import { Button } from "@/components/ui/button";
 
 const ManageUsers = () => {
@@ -23,7 +24,7 @@ const ManageUsers = () => {
       if (res.data.modifiedCount > 0) {
         queryClient.invalidateQueries({ queryKey: ['users'] })
         refetch();
-        alert(`${email} is ${role} now`);
+        toast.success(`${email} is ${role} now`);
       }
     });
   };
