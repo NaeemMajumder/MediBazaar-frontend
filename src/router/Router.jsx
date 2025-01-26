@@ -17,6 +17,9 @@ import ManageCategory from "../components/main/dashboard/adminDesh/manageCagetor
 import ManageMedicines from "../components/main/dashboard/sellerDesh/manageMedicine/ManageMedicines";
 import ManagePayment from "../components/main/dashboard/adminDesh/managePayment.jsx/ManagePayment";
 import AdminHome from "../components/main/dashboard/adminDesh/adminHome/AdminHome";
+import SellsReport from "../components/main/dashboard/adminDesh/sellsReport/SellsReport";
+import ManageAds from "../components/main/dashboard/adminDesh/manageAds/ManageAds";
+import SellerHome from "../components/main/dashboard/sellerDesh/sellerHome/SellerHome";
 
 export const Router = createBrowserRouter([
   {
@@ -85,6 +88,18 @@ export const Router = createBrowserRouter([
           {
             path: "adminHome",
             element: <AdminHome />,
+          },
+          {
+            path: "sellerHome",
+            element: <SellerHome />,
+          },
+          {
+            path: "salesReport",
+            element: <SellsReport />,
+          },
+          {
+            path: "manageBanner",
+            element: <ManageAds />,
           },
         ],
       },

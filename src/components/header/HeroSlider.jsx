@@ -1,4 +1,3 @@
-
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -11,8 +10,21 @@ import "./heroSlider.css";
 
 // import required modules
 import { EffectFade, Pagination, Autoplay } from "swiper/modules";
+import UseAxiosPublic from "../../customHooks/UseAxiosPublic";
+import { useEffect, useState } from "react";
 
 const HeroSlider = () => {
+  const [images, setImages] = useState("");
+
+  const axiosPublic = UseAxiosPublic();
+
+  useEffect(() => {
+    axiosPublic.get("/manageAds").then((res) => {
+      console.log(res.data);
+      setImages(res.data);
+    });
+  }, [axiosPublic]);
+
   return (
     <>
       <header>
@@ -28,18 +40,13 @@ const HeroSlider = () => {
           speed={3000}
           className="mySwiper"
         >
-          <SwiperSlide>
-            <img src="/images/banner1.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="/images/banner2.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="/images/banner3.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="/images/banner4.jpg" />
-          </SwiperSlide>
+          {images.length && images.map((image) => {
+            return (
+              <SwiperSlide key={image._id}>
+                <img src={image.imageUrl} />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </header>
     </>
