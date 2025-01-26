@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UseCart from "../../../customHooks/UseCart";
 import { TiDeleteOutline } from "react-icons/ti";
 import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
+import { Helmet } from "react-helmet";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -35,16 +36,18 @@ const CartPage = () => {
     });
   };
 
-  const allItemDelete = ()=>{
-    axiosSecure.delete(`/cartDetails`)
-    .then(res=>{
+  const allItemDelete = () => {
+    axiosSecure.delete(`/cartDetails`).then((res) => {
       alert("all item deleted");
       refetch();
-    })
-  }
+    });
+  };
 
   return (
     <>
+      <Helmet>
+        <title>Cart | MediBazaar</title>
+      </Helmet>
       <section className="py-10">
         <div className="container m-auto p-4 lg:max-w-[1000px] md:max-w-[800px]">
           <h2 className="text-3xl font-bold text-[#164193] mb-4 heading">
@@ -105,10 +108,16 @@ const CartPage = () => {
               </div>
 
               <div className="flex justify-between mt-4">
-                <button onClick={allItemDelete} className="bg-red-500 text-white px-4 py-2 rounded-md">
+                <button
+                  onClick={allItemDelete}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md"
+                >
                   Clear Cart
                 </button>
-                <Link to={'/dashboard/checkout'} className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300">
+                <Link
+                  to={"/dashboard/checkout"}
+                  className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300"
+                >
                   Checkout
                 </Link>
               </div>

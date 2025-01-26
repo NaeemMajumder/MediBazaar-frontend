@@ -18,7 +18,7 @@ const CategoryData = () => {
     .then(res=>{
       setCategories(res.data);
     })
-  },[])
+  },[axiosPublic])
 
 
   const toggleSidebar = () => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
+import { Helmet } from "react-helmet";
 
 
 const AllCategories = () => {
@@ -18,6 +19,10 @@ const AllCategories = () => {
 
 
   return (
+    <>
+          <Helmet>
+        <title>All Category | MediBazaar</title>
+      </Helmet>
     <div className="bg-[#f3f3f3] py-16 px-4">
       <h1 className="text-center text-3xl lg:text-4xl text-[#164193] font-semibold mb-12 heading">
         Explore Our Categories
@@ -44,7 +49,9 @@ const AllCategories = () => {
           </Link>
         ))}
       </div>
-    </div>
+    </div>    
+    </>
+
   );
 };
 

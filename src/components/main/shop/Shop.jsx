@@ -1,110 +1,181 @@
-import React, { useState } from "react";
-
-const medicines = [
-  {
-    id: 1,
-    name: "Paracetamol",
-    price: "$5",
-    stock: 20,
-    category: "Pain Relief",
-    image: "https://via.placeholder.com/100",
-    description: "Effective pain reliever and fever reducer.",
-  },
-  {
-    id: 2,
-    name: "Amoxicillin",
-    price: "$12",
-    stock: 15,
-    category: "Antibiotic",
-    image: "https://via.placeholder.com/100",
-    description: "Used to treat a variety of bacterial infections.",
-  },
-];
+import React, { useEffect, useState } from "react";
+import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
+import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
+import AuthProviderHook from "../../../customHooks/AuthProviderHook";
+import { useNavigate } from "react-router-dom";
+import UseCart from "../../../customHooks/UseCart";
 
 const Shop = () => {
+  const axiosPublic = UseAxiosPublic();
+  const axiosSecure = UseAxiosSecure();
+  const {user} = AuthProviderHook();
+  const navigate = useNavigate();
+  const [refetch, cartData] = UseCart();
+  const [medicines, setMedicines] = useState([]);
   const [selectedMedicine, setSelectedMedicine] = useState(null);
-  const [cart, setCart] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
 
-  const addToCart = (medicine) => {
-    setCart([...cart, medicine]);
+  useEffect(() => {
+    axiosPublic.get("/medicine").then((res) => {
+      setMedicines(res.data);
+    });
+  }, [axiosPublic]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSort = () => {
+    const sortedMedicines = [...medicines].sort((a, b) => {
+      return sortOrder === "asc"
+        ? a.discount_price - b.discount_price
+        : b.discount_price - a.discount_price;
+    });
+    setMedicines(sortedMedicines);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const filteredMedicines = medicines.filter((medicine) =>
+    medicine.itemName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const paginatedMedicines = filteredMedicines.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleAddCart = (medicine) => {
+    if (user && user?.email) {
+      const shoppingCartItems = {
+        productId: medicine._id,
+        email: user.email,
+        productImg: medicine.imageUrl,
+        productName: medicine.itemName,
+        productCategory: medicine.category,
+        productPrice: medicine.discount_price,
+      };
+
+      axiosSecure.post("/cartDetails", shoppingCartItems).then((res) => {
+        if (res.data.insertedId) {
+          refetch();
+          alert("Added to cart!");
+        }
+      });
+    } else {
+      alert("Please login first!");
+      navigate("/login");
+    }
   };
 
   return (
-    <>
-      <div className="bg-[#f3f3f3]">
-        <div className="p-8  min-h-screen max-w-[1350px] mx-auto">
-          <h1 className="text-3xl lg:text-4xl text-[#164193] font-semibold text-center mb-8">
-            Shop Medicines
-          </h1>
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white shadow-md rounded-lg">
-              <thead className="bg-[#164193] text-white">
-                <tr>
-                  <th className="py-3 px-4">Image</th>
-                  <th className="py-3 px-6 text-left">Name</th>
-                  <th className="py-3 px-6 text-left">Category</th>
-                  <th className="py-3 px-6 text-left">Price</th>
-                  <th className="py-3 px-6 text-left">Stock</th>
-                  <th className="py-3 px-6 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {medicines.map((medicine) => (
-                  <tr key={medicine.id} className="border-b hover:bg-gray-100">
-                    <td className="py-2 px-4 text-center"><img src={medicine.image} alt={medicine.name} className="w-12 h-12 mx-auto" /></td>
-                    <td className="py-4 px-6">{medicine.name}</td>
-                    <td className="py-4 px-6">{medicine.category}</td>
-                    <td className="py-4 px-6">{medicine.price}</td>
-                    <td className="py-4 px-6">{medicine.stock}</td>
-                    <td className="py-4 px-6 flex justify-center gap-4">
-                      <button
-                        onClick={() => setSelectedMedicine(medicine)}
-                        className="bg-[#38A7D6] text-white px-4 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition"
-                      >
-                        👁 View
-                      </button>
-                      <button
-                        onClick={() => addToCart(medicine)}
-                        className="bg-[#00B092] text-white px-4 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition"
-                      >
-                        ➕ Select
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {selectedMedicine && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                <button
-                  onClick={() => setSelectedMedicine(null)}
-                  className="absolute top-2 right-4 text-2xl text-[#164193] hover:text-red-500"
-                >
-                  &times;
-                </button>
-                <img
-                  src={selectedMedicine.image}
-                  alt={selectedMedicine.name}
-                  className="w-full h-40 object-cover mb-4 rounded-lg"
-                />
-                <h2 className="text-2xl font-semibold text-[#164193] mb-2">
-                  {selectedMedicine.name}
-                </h2>
-                <p className="text-gray-600">{selectedMedicine.description}</p>
-                <p className="mt-4 font-bold">
-                  Price: {selectedMedicine.price}
-                </p>
-                <p>Stock: {selectedMedicine.stock}</p>
-              </div>
-            </div>
-          )}
-        </div>
+    <div className="container max-w-[1350px] mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center text-[#164193] my-6">Shop Medicines</h1>
+      <div className="flex justify-between mb-4">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="p-2 border border-gray-300 rounded w-full max-w-sm"
+        />
+        <button
+          onClick={handleSort}
+          className="bg-[#1ca288] text-white px-4 py-2 rounded ml-4"
+        >
+          Sort by Price ({sortOrder === "asc" ? "Ascending" : "Descending"})
+        </button>
       </div>
-    </>
+      <div className="overflow-x-auto shadow-lg rounded-lg">
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-[#AAF0F0] text-[#164193]">
+            <tr>
+              <th className="p-4 border">Image</th>
+              <th className="p-4 border">Name</th>
+              <th className="p-4 border">Category</th>
+              <th className="p-4 border">Original Price</th>
+              <th className="p-4 border">Discount Price</th>
+              <th className="p-4 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedMedicines.map((medicine) => (
+              <tr key={medicine._id} className="border-b hover:bg-gray-100">
+                <td className="p-4 border">
+                  <img
+                    src={medicine.imageUrl}
+                    alt={medicine.itemName}
+                    className="w-12 h-12 rounded"
+                  />
+                </td>
+                <td className="p-4 border">{medicine.itemName}</td>
+                <td className="p-4 border">{medicine.category}</td>
+                <td className="p-4 border">${medicine.original_price}</td>
+                <td className="p-4 border text-green-600">${medicine.discount_price}</td>
+                <td className="p-4 border flex gap-2">
+                  <button
+                    className="bg-[#1ca288] text-white px-4 py-2 rounded"
+                    onClick={() => setSelectedMedicine(medicine)}
+                  >
+                    👁 View
+                  </button>
+                  <button onClick={()=>handleAddCart(medicine)}  className="bg-[#3AB092] text-white px-4 py-2 rounded">
+                    ➕ Select
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: Math.ceil(filteredMedicines.length / itemsPerPage) }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            className={`mx-1 px-4 py-2 rounded ${currentPage === i + 1 ? "bg-[#1ca288] text-white" : "bg-gray-200"}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
+
+      {selectedMedicine && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg h-[60vh] overflow-auto w-full">
+            <h2 className="text-2xl font-semibold text-[#164193] mb-4">
+              {selectedMedicine.itemName}
+            </h2>
+            <img
+              src={selectedMedicine.imageUrl}
+              alt={selectedMedicine.itemName}
+              className="w-full h-auto rounded-lg mx-auto"
+            />
+            <p className="mt-4 text-gray-700">
+              <strong>Category:</strong> {selectedMedicine.category}
+            </p>
+            <p className="text-gray-700">
+              <strong>Original Price:</strong> ${selectedMedicine.original_price}
+            </p>
+            <p className="text-green-600 font-bold">
+              <strong>Discount Price:</strong> ${selectedMedicine.discount_price}
+            </p>
+            <p className="text-gray-500 mt-2">
+              <strong>Seller:</strong> {selectedMedicine.userName} ({selectedMedicine.userEmail})
+            </p>
+            <button
+              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+              onClick={() => setSelectedMedicine(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

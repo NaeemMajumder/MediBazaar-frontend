@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import { useNavigate } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 
 const MyProfile = () => {
   let { user, setUser, updateUserProfile } = AuthProviderHook();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  const navigate = useNavigate("/")
+  const navigate = useNavigate("/");
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
@@ -18,17 +18,22 @@ const MyProfile = () => {
     const updatedPhotoURL = formData.get("photoURL");
 
     // Call the updateUser function to update user info (you need to define this in AuthProvider)
-    updateUserProfile({ displayName: updatedName, photoURL: updatedPhotoURL })
-      .then(() => {
-        alert('Profile updated successfully! Your changes have been saved.');
-        navigate("/myProfile")
-      });
+    updateUserProfile({
+      displayName: updatedName,
+      photoURL: updatedPhotoURL,
+    }).then(() => {
+      alert("Profile updated successfully! Your changes have been saved.");
+      navigate("/myProfile");
+    });
 
     setIsModalOpen(false);
   };
 
   return (
     <>
+      <Helmet>
+        <title>Profile | MediBazaar</title>
+      </Helmet>
       <div className="min-h-screen bg-gradient-to-b from-[#F0FAFB] via-[#b6dde2] to-white flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         {/* Profile Card */}
         <div className="bg-white shadow-xl rounded-lg p-8 max-w-md w-full text-center">
