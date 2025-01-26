@@ -9,39 +9,44 @@ const CategoryKit = ({ medicines, category }) => {
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [cart, setCart] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [sortOrder, setSortOrder] = useState("asc"); // Sort order state
   const itemsPerPage = 5;
   const navigate = useNavigate();
   let axiosSecure = UseAxiosPublic();
-  const {user} = AuthProviderHook();
+  const { user } = AuthProviderHook();
   const [refetch] = UseCart();
-
-
 
   const totalMedicines = medicines.length;
   const uniqueCategories = category;
 
+  // Search logic
+  const filteredMedicines = medicines.filter((medicine) =>
+    medicine.itemName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Sorting logic
+  const sortedMedicines = filteredMedicines.sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.discount_price - b.discount_price; // Ascending
+    } else {
+      return b.discount_price - a.discount_price; // Descending
+    }
+  });
+
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentMedicines = medicines.slice(indexOfFirstItem, indexOfLastItem);
+  const currentMedicines = sortedMedicines.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(totalMedicines / itemsPerPage);
+  const totalPages = Math.ceil(sortedMedicines.length / itemsPerPage);
 
   const handleViewDetails = (medicine) => {
     setSelectedMedicine(medicine);
   };
 
-  const handleAddToCart = (medicine) => {
-    setCart([...cart, medicine]);
-  };
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-
   const handleAddCart = (medicine) => {
     if (user && user?.email) {
-      console.log("data added");
       const shoppingCartItems = {
         productId: medicine._id,
         email: user.email,
@@ -52,17 +57,19 @@ const CategoryKit = ({ medicines, category }) => {
       };
 
       axiosSecure.post("/cartDetails", shoppingCartItems).then((res) => {
-        console.log(res.data);
         if (res.data.insertedId) {
-          // refetch will update the cart... like because of this we do not need to use specific state variable to re-render again.
           refetch();
-          alert('cart added')
+          alert("Added to cart!");
         }
       });
     } else {
-      alert("login first");
+      alert("Please login first!");
       navigate("/login");
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   return (
@@ -73,7 +80,35 @@ const CategoryKit = ({ medicines, category }) => {
 
       <div className="mb-4 text-center text-lg font-semibold text-[#164193]">
         <p className="font-bold">Total Medicines: {totalMedicines}</p>
-        <p className="font-bold">Unique Categories: <span className="text-[#1ca288]">{uniqueCategories}</span></p>
+        <p className="font-bold">
+          Unique Categories: <span className="text-[#1ca288]">{uniqueCategories}</span>
+        </p>
+      </div>
+
+      {/* Search and Sort Controls */}
+      <div className="flex justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border p-2 rounded-md w-64"
+          />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <label htmlFor="sortOrder" className="font-semibold">Sort by Price:</label>
+          <select
+            id="sortOrder"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="border p-2 rounded-md"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -89,10 +124,7 @@ const CategoryKit = ({ medicines, category }) => {
           </thead>
           <tbody>
             {currentMedicines.map((medicine) => (
-              <tr
-                key={medicine.itemName}
-                className="border-b hover:bg-gray-100"
-              >
+              <tr key={medicine.itemName} className="border-b hover:bg-gray-100">
                 <td className="p-4">
                   <img
                     src={medicine.imageUrl}
@@ -100,9 +132,7 @@ const CategoryKit = ({ medicines, category }) => {
                     className="w-16 h-16 rounded-md"
                   />
                 </td>
-                <td className="p-4 text-[#164193] font-semibold">
-                  {medicine.itemName}
-                </td>
+                <td className="p-4 text-[#164193] font-semibold">{medicine.itemName}</td>
                 <td className="p-4">{medicine.category}</td>
                 <td className="p-4">{medicine.discount_price}</td>
                 <td className="p-4 flex gap-2">
@@ -149,7 +179,7 @@ const CategoryKit = ({ medicines, category }) => {
         ))}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages ||  medicines.length === 0}
+          disabled={currentPage === totalPages || medicines.length === 0}
           className="bg-[#164193] text-white px-4 py-2 rounded-md disabled:opacity-50"
         >
           Next

@@ -107,15 +107,6 @@ const Dashboard = () => {
               </span>
             </NavLink>
             <NavLink
-              to="/dashboard/salesReport"
-              className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
-            >
-              <FaMoneyBillTrendUp size={28} className="text-white" />
-              <span className="hidden md:inline text-lg font-semibold">
-                Sales Report
-              </span>
-            </NavLink>
-            <NavLink
               to="/dashboard/manageBanner"
               className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
             >

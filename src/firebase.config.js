@@ -6,12 +6,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC0xyVeGcO0NZbm92vfGPzrncrQPtt3HP4",
-  authDomain: "medi-bazaar.firebaseapp.com",
-  projectId: "medi-bazaar",
-  storageBucket: "medi-bazaar.firebasestorage.app",
-  messagingSenderId: "432573984449",
-  appId: "1:432573984449:web:f41d6ddbe34419decd2e40"
+  apiKey: import.meta.env.VITE_apiKey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId
 };
 
 // Initialize Firebase

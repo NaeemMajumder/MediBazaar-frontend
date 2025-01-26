@@ -2,9 +2,17 @@ import React, { useState } from "react";
 import UseAxiosSecure from "../../../../../customHooks/UseAxiosSecure";
 import UseCart from "../../../../../customHooks/UseCart";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import UseAxiosPublic from "../../../../../customHooks/UseAxiosPublic";
 
 const ManageAds = () => {
+
+  const image_bb_url = `https://api.imgbb.com/1/upload?key=${
+    import.meta.env.VITE_IMAGE_HOSTING_KEY
+  }`;
+  console.log(image_bb_url);
+
   const axiosSecure = UseAxiosSecure();
+  const axiosPublic = UseAxiosPublic();
   const [refetch] = UseCart();
   const queryClient = useQueryClient();
 
@@ -12,26 +20,18 @@ const ManageAds = () => {
     queryKey: ["banner"],
     queryFn: async () => {
       let res = await axiosSecure("/manageAds");
-      console.log(res.data);
       return res.data;
     },
   });
 
-  const [ads, setAds] = useState([
-    // Example ads (you can fetch these from a backend)
-    { id: 1, imageUrl: "https://via.placeholder.com/150" },
-    { id: 2, imageUrl: "https://via.placeholder.com/150" },
-  ]);
-
   const [showPopup, setShowPopup] = useState(false);
-  const [newAdUrl, setNewAdUrl] = useState("");
+  const [newAdUrl, setNewAdUrl] = useState(null);
 
   const handleDelete = (id) => {
-    // setAds(ads.filter(ad => ad.id !== id));
-    // console.log("deleted");
     axiosSecure.delete(`/manageAds/${id}`).then((res) => {
       if (res.data.deletedCount > 0) {
         queryClient.invalidateQueries({ queryKey: ["banner"] });
+        alert("banner deleted")
         refetch();
       }
     });
@@ -39,16 +39,31 @@ const ManageAds = () => {
 
   const handleAddBanner = (event) => {
     event.preventDefault();
-    const imageUrl = event.target.imageUrl.value;
-    console.log(imageUrl);
-    axiosSecure.post("/manageAds", { imageUrl }).then((res) => {
-      if (res.data.insertedId) {
-        alert("banner added");
-        queryClient.invalidateQueries({ queryKey: ["banner"] });
-        refetch();
-        setShowPopup(false);
-      }
-    });
+
+    const formData = new FormData();
+    formData.append("image", newAdUrl);
+
+    axiosPublic
+      .post(image_bb_url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        const imageUrl = res.data.data.display_url;
+        axiosSecure.post("/manageAds", { imageUrl }).then((res) => {
+          if (res.data.insertedId) {
+            alert("banner added");
+            queryClient.invalidateQueries({ queryKey: ["banner"] });
+            refetch();
+            setShowPopup(false);
+          }
+        });
+      });
+  };
+
+  const handleFileChange = (e) => {
+    setNewAdUrl(e.target.files[0]); // Save the file to state
   };
 
   return (
@@ -88,13 +103,23 @@ const ManageAds = () => {
             <h3 className="text-xl font-semibold text-[#164193] mb-4">
               Add New Banner
             </h3>
-            <form onSubmit={handleAddBanner} action="">
-              <input
-                type="text"
-                name="imageUrl"
-                placeholder="Enter Image URL"
-                className="w-full border p-2 rounded-md mb-4"
-              />
+            <form onSubmit={handleAddBanner}>
+              <div className="mb-4">
+                <label
+                  htmlFor="image"
+                  className="block text-sm font-medium text-[#1ca288] mb-2"
+                >
+                  Upload Banner Image
+                </label>
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  required
+                  className="w-full border p-2 rounded-md mb-4"
+                />
+              </div>
               <div className="flex justify-between">
                 <button
                   onClick={() => setShowPopup(false)}
@@ -102,7 +127,10 @@ const ManageAds = () => {
                 >
                   Cancel
                 </button>
-                <button className="bg-[#00b090] text-white py-2 px-4 rounded-lg hover:bg-[#00a276] transition">
+                <button
+                  type="submit"
+                  className="bg-[#00b090] text-white py-2 px-4 rounded-lg hover:bg-[#00a276] transition"
+                >
                   Add Banner
                 </button>
               </div>

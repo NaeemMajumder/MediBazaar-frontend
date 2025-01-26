@@ -9,11 +9,15 @@ const InvoicePage = () => {
   let [paymentHistory, setPaymentHistory] = useState([]);
   let { user } = AuthProviderHook();
   const axiosSecure = UseAxiosSecure();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    axiosSecure.get(`/payments?email=${user?.email}`).then((res) => {
-      setPaymentHistory(res.data);
-    });
+    if (user?.email) {
+      axiosSecure.get(`/payments?email=${user.email}`).then((res) => {
+        setPaymentHistory(res.data);
+      });
+    }
   }, [axiosSecure, user?.email]);
 
   const handlePrint = () => {
@@ -25,7 +29,7 @@ const InvoicePage = () => {
     doc.autoTable({
       startY: 40,
       head: [["Email", "Date", "Transaction ID", "Price", "Currency", "Status"]],
-      body: paymentHistory.map(payment => [
+      body: filteredPayments().map(payment => [
         payment.email,
         payment.date,
         payment.transactionId,
@@ -38,11 +42,38 @@ const InvoicePage = () => {
     doc.save("invoice.pdf");
   };
 
+  const filteredPayments = () => {
+    return paymentHistory.filter(payment => {
+      const paymentDate = new Date(payment.date);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+      return (
+        (!start || paymentDate >= start) &&
+        (!end || paymentDate <= end)
+      );
+    });
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200 text-gray-800">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-[#164193]">Invoice</h1>
         <img src="/images/logo.png" alt="MediBazaar Logo" className="w-16" />
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="border p-2 rounded-md"
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="border p-2 rounded-md"
+        />
       </div>
 
       <table className="w-full border-collapse border border-gray-300 mb-6">
@@ -55,7 +86,7 @@ const InvoicePage = () => {
             <th className="border border-gray-300 p-2">Status</th>
           </tr>
         </thead>
-        {paymentHistory.map((payment) => (
+        {filteredPayments().map((payment) => (
           <tbody key={payment._id}>
             <tr className="text-center">
               <td className="border border-gray-300 p-2">{payment.date}</td>

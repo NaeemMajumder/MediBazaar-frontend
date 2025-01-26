@@ -8,6 +8,10 @@ import UseCart from "../../../../../customHooks/UseCart";
 import { TiDeleteOutline } from "react-icons/ti";
 
 const ManageMedicines = () => {
+  const image_bb_url = `https://api.imgbb.com/1/upload?key=${
+    import.meta.env.VITE_IMAGE_HOSTING_KEY
+  }`;
+
   const [showModal, setShowModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [refetch] = UseCart();
@@ -47,21 +51,24 @@ const ManageMedicines = () => {
 
   // Handle form input change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setMedicineData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+    if (name === "imageUrl") {
+      setMedicineData({ ...medicineData, imageUrl: files[0] }); // For image upload
+    } else {
+      setMedicineData({ ...medicineData, [name]: value });
+    }
   };
 
   // Handle form submission
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     medicineData.userName = user.displayName;
     medicineData.userEmail = user.email;
 
-    if (parseInt(medicineData.discount)) {
+    // console.log(medicineData.imageUrl);
+    let imageUrl = medicineData.imageUrl;
 
+    if (parseInt(medicineData.discount)) {
       let original_price = parseInt(medicineData.original_price);
       let discount = parseInt(medicineData.discount);
       let discount_price = original_price - original_price * (discount / 100);
@@ -70,28 +77,50 @@ const ManageMedicines = () => {
       medicineData.discount_price = medicineData.original_price;
     }
 
-    axiosSecure.post("/medicine", medicineData).then((res) => {
-      if (res.data.insertedId) {
-        alert("item added");
-        setShowModal(false);
-        setMedicineData([]);
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append("image", imageUrl);
+    console.log(formData);
+
+    try {
+      // Send the image to the server
+      let res = await axiosPublic.post(image_bb_url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(res.data); // Log the response data (the uploaded image URL or status)
+
+      // After successful image upload, you can proceed with the user registration
+      const uploadedImageUrl = res.data.data.display_url;
+
+      medicineData.imageUrl = uploadedImageUrl;
+
+      axiosSecure.post("/medicine", medicineData).then((res) => {
+        if (res.data.insertedId) {
+          alert("item added");
+          setShowModal(false);
+          setMedicineData([]);
+          queryClient.invalidateQueries({ queryKey: ["medicines"] });
+          refetch();
+        }
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  let handleItemDelete = (id) => {
+    axiosSecure.delete(`/medicine/${id}`).then((res) => {
+      console.log(res.data);
+      if (res.data.deletedCount > 0) {
+        alert("item deleted");
         queryClient.invalidateQueries({ queryKey: ["medicines"] });
         refetch();
       }
     });
   };
-
-  let handleItemDelete = (id)=>{
-    axiosSecure.delete(`/medicine/${id}`)
-    .then(res=>{
-        console.log(res.data);
-        if(res.data.deletedCount>0){
-            alert('item deleted');
-            queryClient.invalidateQueries({ queryKey: ["medicines"] });
-            refetch();
-        }
-    })
-  }
 
   return (
     <section className="py-10 px-4">
@@ -144,7 +173,10 @@ const ManageMedicines = () => {
                     <td className="p-3 border">{medicine.discount}%</td>
                     <td className="p-3 border">{medicine.discount_price}</td>
                     <td className="p-2 border">
-                      <button onClick={()=>handleItemDelete(medicine._id)} className="bg-red-500 text-white rounded-full">
+                      <button
+                        onClick={() => handleItemDelete(medicine._id)}
+                        className="bg-red-500 text-white rounded-full"
+                      >
                         <TiDeleteOutline size={25} />
                       </button>
                     </td>
@@ -183,9 +215,9 @@ const ManageMedicines = () => {
                   Image URL:
                 </label>
                 <input
-                  type="text"
+                  type="file"
                   name="imageUrl"
-                  value={medicineData.imageUrl}
+                  accept="image/*" // Accept only image files
                   onChange={handleInputChange}
                   placeholder="Enter image URL"
                   className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1ca288]"

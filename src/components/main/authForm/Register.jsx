@@ -6,6 +6,13 @@ import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 import UseAxiosPublic from "../../../customHooks/UseAxiosPublic";
 
 const Register = ({ handleSubmitRegister }) => {
+  console.log(import.meta.env.VITE_IMAGE_HOSTING_KEY);
+
+  const image_bb_url = `https://api.imgbb.com/1/upload?key=${
+    import.meta.env.VITE_IMAGE_HOSTING_KEY
+  }`;
+  console.log(image_bb_url);
+
   // using custom hook..........
   let { setUser, registerWithEmail, updateUserProfile, handleError } =
     AuthProviderHook();
@@ -17,7 +24,7 @@ const Register = ({ handleSubmitRegister }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    photoUrl: "",
+    photoUrl: null,
   });
 
   const [passwordValid, setPasswordValid] = useState({
@@ -31,8 +38,12 @@ const Register = ({ handleSubmitRegister }) => {
   const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    if (name === "photoUrl") {
+      setFormData({ ...formData, photoUrl: files[0] }); // For image upload
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
 
     if (name === "password") {
       validatePassword(value);
@@ -68,39 +79,62 @@ const Register = ({ handleSubmitRegister }) => {
   };
 
   // confirm registration
-  const handleRegistrationForm = (event) => {
+  const handleRegistrationForm = async (event) => {
     event.preventDefault();
 
     // form data collect
     let form = event.target;
     let name = form.name.value;
     let email = form.email.value;
-    let photoUrl = form.photoUrl.value;
+    let photoUrl = formData.photoUrl;
     let password = form.password.value;
+    console.log(photoUrl);
 
-    console.log(name, email, photoUrl, password);
+    if (photoUrl) {
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append("image", photoUrl);
+      console.log(formData);
 
-    registerWithEmail(email, password)
-      .then((result) => {
-        setUser(result.user);
-        updateUserProfile({ displayName: name, photoURL: photoUrl })
-          .then(() => {
-            let userInfo = {
-              name,
-              email,
-              photoUrl,
-            };
+      try {
+        // Send the image to the server
+        let res = await axiosPublic.post(image_bb_url, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-            axiosPublic.post("/user", userInfo).then((res) => {
-              if (res.data.insertedId) {
-                navigate("/");
-                alert("register successful");
-              }
-            });
+        console.log(res.data); // Log the response data (the uploaded image URL or status)
+
+        // After successful image upload, you can proceed with the user registration
+        const uploadedImageUrl = res.data.data.display_url;
+        registerWithEmail(email, password)
+          .then((result) => {
+            setUser(result.user);
+            updateUserProfile({ displayName: name, photoURL: uploadedImageUrl })
+              .then(() => {
+                let userInfo = {
+                  name,
+                  email,
+                  uploadedImageUrl,
+                };
+
+                axiosPublic.post("/user", userInfo).then((res) => {
+                  if (res.data.insertedId) {
+                    navigate("/");
+                    alert("register successful");
+                  }
+                });
+              })
+              .catch(handleError);
           })
           .catch(handleError);
-      })
-      .catch(handleError);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+
+    // console.log(name, email, photoUrl, password);
   };
 
   return (
@@ -148,11 +182,10 @@ const Register = ({ handleSubmitRegister }) => {
               <input
                 id="photo"
                 name="photoUrl"
-                type="url"
-                value={formData.photoUrl}
-                onChange={handleChange}
+                type="file"
+                accept="image/*" // Accept only image files
+                onChange={handleChange} // Handle file selection
                 className="mt-1 block w-full px-4 py-2 border-2 border-[#3AB092] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#164193] sm:text-sm"
-                placeholder="Enter your photo URL"
               />
             </div>
 
