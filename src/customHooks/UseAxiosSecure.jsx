@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthProviderHook from "./AuthProviderHook";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://medi-bazaar-backend.vercel.app",
   // withCredentials:true
 });
 
