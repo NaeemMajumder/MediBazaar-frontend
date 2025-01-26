@@ -65,7 +65,7 @@ const ManageMedicines = () => {
       let original_price = parseInt(medicineData.original_price);
       let discount = parseInt(medicineData.discount);
       let discount_price = original_price - original_price * (discount / 100);
-      medicineData.discount_price = discount_price;
+      medicineData.discount_price = Math.floor(discount_price);
     } else {
       medicineData.discount_price = medicineData.original_price;
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   FaShoppingCart,
@@ -16,9 +16,22 @@ import {
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaMoneyBill1Wave, FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiMedicines } from "react-icons/gi";
+import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
+import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 
 const Dashboard = () => {
-  let isRole = "seller";
+  let [isRole, setIsRole] = useState("user");
+  let {user} = AuthProviderHook();
+  const axiosSecure = UseAxiosSecure();
+
+
+  useEffect(()=>{
+    axiosSecure.get(`/user?email=${user?.email}`)
+    .then(res=>{
+      console.log(res.data[0].isRole);
+      setIsRole(res.data[0].isRole);
+    })
+  },[])
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">

@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase.config";
+import UseAxiosPublic from "../customHooks/UseAxiosPublic";
 
 export const AuthContext = createContext();
 
@@ -20,53 +21,53 @@ const AuthProvider = ({ children }) => {
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
   const gitHubProvider = new GithubAuthProvider();
+  const axiosPublic = UseAxiosPublic();
 
   // google registration
   const registerWithGoogle = () => {
-    setLoading(true)
+    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
   // facebook registration
   const registerWithFacebook = () => {
-    setLoading(true)
+    setLoading(true);
     return signInWithPopup(auth, facebookProvider);
   };
 
   // gitHub registration
   const registerWithGitHub = () => {
-    setLoading(true)
+    setLoading(true);
     return signInWithPopup(auth, gitHubProvider);
   };
 
   // E-mail registration
   const registerWithEmail = (email, password) => {
-    setLoading(true)
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   // SignIn / Login
   const signInUser = (email, password) => {
-    setLoading(true)
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   // SignOut / Logout
   const signOutUser = () => {
-    setLoading(true)
+    setLoading(true);
     return signOut(auth);
   };
 
   // update user profile
   const updateUserProfile = (updatedData) => {
-    setLoading(true)
+    setLoading(true);
     return updateProfile(auth.currentUser, updatedData);
   };
 
-  const handleError = (error)=>{
-    alert(error.message)
-  }
-
+  const handleError = (error) => {
+    alert(error.message);
+  };
 
   const authInfo = {
     user,
@@ -84,8 +85,18 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
+      if (currentUser?.email) {
+        let userInfo = { email: currentUser.email };
+        axiosPublic.post("/jwt", user).then((res) => {
+          if (res.data.token) {
+            localStorage.setItem("access-token", res.data.token);
+            setUser(currentUser);
+            setLoading(false);
+          }else{
+            localStorage.removeItem("access-token");
+          }
+        });
+      }
     });
     return () => {
       unsubscribe();

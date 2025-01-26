@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UseCart from "../../../customHooks/UseCart";
 import { TiDeleteOutline } from "react-icons/ti";
 import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
@@ -108,9 +108,9 @@ const CartPage = () => {
                 <button onClick={allItemDelete} className="bg-red-500 text-white px-4 py-2 rounded-md">
                   Clear Cart
                 </button>
-                <button className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300">
+                <Link to={'/checkout'} className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300">
                   Checkout
-                </button>
+                </Link>
               </div>
             </div>
           ) : (
