@@ -1,62 +1,79 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FaPrint } from "react-icons/fa";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import UseAxiosSecure from "../../../customHooks/UseAxiosSecure";
+import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 
 const InvoicePage = () => {
+  let [paymentHistory, setPaymentHistory] = useState([]);
+  let { user } = AuthProviderHook();
+  const axiosSecure = UseAxiosSecure();
+
+  useEffect(() => {
+    axiosSecure.get(`/payments?email=${user?.email}`).then((res) => {
+      setPaymentHistory(res.data);
+    });
+  }, [axiosSecure, user?.email]);
+
   const handlePrint = () => {
-    window.print();
+    const doc = new jsPDF();
+    doc.setFontSize(22);
+    doc.text("MediBazaar Invoice", 15, 20);
+    doc.setFontSize(14);
+    
+    doc.autoTable({
+      startY: 40,
+      head: [["Email", "Date", "Transaction ID", "Price", "Currency", "Status"]],
+      body: paymentHistory.map(payment => [
+        payment.email,
+        payment.date,
+        payment.transactionId,
+        payment.price,
+        payment.currency,
+        payment.status,
+      ]),
+    });
+
+    doc.save("invoice.pdf");
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-[900px] border shadow-lg bg-white rounded-lg">
-      <div className="text-center mb-8">
-        <img
-          src="/logo.png"
-          alt="MediBazaar Logo"
-          className="mx-auto h-20"
-        />
-        <h2 className="text-3xl font-bold text-[#164193] mt-2">Invoice</h2>
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl border border-gray-200 text-gray-800">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-[#164193]">Invoice</h1>
+        <img src="/images/logo.png" alt="MediBazaar Logo" className="w-16" />
       </div>
 
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-[#1ca288]">Customer Details</h3>
-        <p className="text-[#164193]">Name: John Doe</p>
-        <p className="text-[#164193]">Email: johndoe@example.com</p>
-        <p className="text-[#164193]">Phone: +1234567890</p>
-      </div>
-
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-[#1ca288]">Order Summary</h3>
-        <table className="w-full border border-gray-200">
-          <thead className="bg-[#AAF0F0] text-[#164193]">
-            <tr>
-              <th className="border p-2">Medicine</th>
-              <th className="border p-2">Quantity</th>
-              <th className="border p-2">Price</th>
-            </tr>
-          </thead>
-          <tbody>
+      <table className="w-full border-collapse border border-gray-300 mb-6">
+        <thead>
+          <tr className="bg-[#AAF0F0]">
+            <th className="border border-gray-300 p-2">Date</th>
+            <th className="border border-gray-300 p-2">Transaction ID</th>
+            <th className="border border-gray-300 p-2">Price</th>
+            <th className="border border-gray-300 p-2">Currency</th>
+            <th className="border border-gray-300 p-2">Status</th>
+          </tr>
+        </thead>
+        {paymentHistory.map((payment) => (
+          <tbody key={payment._id}>
             <tr className="text-center">
-              <td className="border p-2">Paracetamol</td>
-              <td className="border p-2">2</td>
-              <td className="border p-2">$20</td>
-            </tr>
-            <tr className="text-center">
-              <td className="border p-2">Amoxicillin</td>
-              <td className="border p-2">1</td>
-              <td className="border p-2">$15</td>
+              <td className="border border-gray-300 p-2">{payment.date}</td>
+              <td className="border border-gray-300 p-2">{payment.transactionId}</td>
+              <td className="border border-gray-300 p-2">{payment.price}</td>
+              <td className="border border-gray-300 p-2">{payment.currency}</td>
+              <td className="border border-gray-300 p-2">{payment.status}</td>
             </tr>
           </tbody>
-        </table>
-      </div>
+        ))}
+      </table>
 
-      <div className="flex justify-between items-center mt-6">
-        <h3 className="text-2xl font-bold text-[#164193]">Grand Total: $35</h3>
-        <button
-          onClick={handlePrint}
-          className="bg-[#00B092] text-white px-6 py-2 rounded-md shadow-md hover:bg-[#1ca288] transition duration-300"
-        >
-          Print Invoice
-        </button>
-      </div>
+      <button
+        className="bg-[#3AB092] text-white py-2 px-4 rounded-xl shadow-md"
+        onClick={handlePrint}
+      >
+        <FaPrint className="inline mr-2" /> Print Invoice
+      </button>
     </div>
   );
 };

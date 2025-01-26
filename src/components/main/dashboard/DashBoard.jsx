@@ -21,55 +21,51 @@ import AuthProviderHook from "../../../customHooks/AuthProviderHook";
 
 const Dashboard = () => {
   let [isRole, setIsRole] = useState("user");
-  let {user} = AuthProviderHook();
+  let { user } = AuthProviderHook();
   const axiosSecure = UseAxiosSecure();
 
-
-  useEffect(()=>{
-    axiosSecure.get(`/user?email=${user?.email}`)
-    .then(res=>{
+  useEffect(() => {
+    axiosSecure.get(`/user?email=${user?.email}`).then((res) => {
       console.log(res.data[0].isRole);
       setIsRole(res.data[0].isRole);
-    })
-  },[])
+    });
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Sidebar */}
       <aside className="bg-[#2facb7] lg:w-1/4 md:h-screen h-auto flex md:flex-col flex-row items-center justify-between md:justify-start md:gap-8 gap-0 md:p-8 p-4 fixed bottom-0 left-0 w-full md:relative shadow-xl border-t-4  border-[#1ca288] z-50 gap-x-4 overflow-x-auto">
-        {isRole === "user" && (
-          <>
-            <NavLink
-              to="/dashboard/cartDetails"
-              className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
-            >
-              <FaShoppingCart size={28} className="text-white" />
-              <span className="hidden md:inline text-lg font-semibold">
-                Cart Items
-              </span>
-            </NavLink>
+        <>
+          <NavLink
+            to="/dashboard/cartDetails"
+            className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
+          >
+            <FaShoppingCart size={28} className="text-white" />
+            <span className="hidden md:inline text-lg font-semibold">
+              Cart Items
+            </span>
+          </NavLink>
 
-            <NavLink
-              to="/dashboard/payment-history"
-              className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
-            >
-              <FaCreditCard size={28} className="text-white" />
-              <span className="hidden md:inline text-lg font-semibold">
-                Payment History
-              </span>
-            </NavLink>
+          <NavLink
+            to="/dashboard/paymentHistory"
+            className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
+          >
+            <FaCreditCard size={28} className="text-white" />
+            <span className="hidden md:inline text-lg font-semibold">
+              Payment History
+            </span>
+          </NavLink>
 
-            <NavLink
-              to="/dashboard/pay-now"
-              className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
-            >
-              <FaMoneyBillWave size={28} className="text-white" />
-              <span className="hidden md:inline text-lg font-semibold">
-                Pay Now
-              </span>
-            </NavLink>
-          </>
-        )}
+          <NavLink
+            to="/dashboard/checkout"
+            className="flex flex-col items-center justify-center md:justify-start md:flex-row md:items-start md:gap-4 gap-2 text-white transition-all duration-300 hover:text-[#1b7a67] md:w-full p-3 rounded-lg md:hover:bg-[#9cc8bf]"
+          >
+            <FaMoneyBillWave size={28} className="text-white" />
+            <span className="hidden md:inline text-lg font-semibold">
+              Pay Now
+            </span>
+          </NavLink>
+        </>
 
         {/* for admin */}
 

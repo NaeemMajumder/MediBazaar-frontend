@@ -66,17 +66,22 @@ export const Router = createBrowserRouter([
             path: "manageMedicines",
             element: <ManageMedicines />,
           },
+          {
+            path: "checkout",
+            element: <Checkout />,
+          },
+          {
+            path: "paymentHistory",
+            element: <InvoicePage />,
+          },
         ],
       },
 
-      {
-        path: "checkout",
-        element: <Checkout />,
-      },
-      {
-        path: "invoice",
-        element: <InvoicePage />,
-      },
+
+      // {
+      //   path: "invoice",
+      //   element: <InvoicePage />,
+      // },
       {
         path: "/categories/:category",
         element: <CategoryData />,
