@@ -16,6 +16,7 @@ import ManageUsers from "../components/main/dashboard/adminDesh/ManageUsers";
 import ManageCategory from "../components/main/dashboard/adminDesh/manageCagetory/ManageCategory";
 import ManageMedicines from "../components/main/dashboard/sellerDesh/manageMedicine/ManageMedicines";
 import ManagePayment from "../components/main/dashboard/adminDesh/managePayment.jsx/ManagePayment";
+import AdminHome from "../components/main/dashboard/adminDesh/adminHome/AdminHome";
 
 export const Router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ export const Router = createBrowserRouter([
           {
             path: "paymentManagement",
             element: <ManagePayment />,
+          },
+          {
+            path: "adminHome",
+            element: <AdminHome />,
           },
         ],
       },
