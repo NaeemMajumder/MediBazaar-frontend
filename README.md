@@ -2,6 +2,9 @@
 
 Welcome to **MediBazaar**, a multi-vendor medicine-selling e-commerce platform that allows users to browse, search, and purchase medicines online with ease. The project includes both frontend and backend solutions to provide a seamless user experience.
 
+
+<img src="./public//images//mediBazaar.jpg"/>
+
 - **Frontend URL:** [MediBazaar Frontend](https://medi-bazaar.web.app/)
 - **Backend URL:** [MediBazaar Backend](https://medi-bazaar-backend.vercel.app/)
 
