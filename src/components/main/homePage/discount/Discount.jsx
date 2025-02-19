@@ -49,6 +49,7 @@ const Discount = () => {
           }}
           className="mySwiper2 "
         >
+         
           {/* <SwiperSlide>
             <ProductCard />
           </SwiperSlide> */}
