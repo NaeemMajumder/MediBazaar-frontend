@@ -18,6 +18,7 @@ const Category = () => {
     });
   }, []);
 
+  
   return (
     <>
       <h1 className="text-center text-2xl md:text-3xl lg:text-4xl text-[#164193] font-semibold heading lg:mb-20 md:mb-14 mb-10">
