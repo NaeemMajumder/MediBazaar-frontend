@@ -30,6 +30,7 @@ const NavBar = () => {
       .catch(handleError);
   };
 
+  
   let links = (
     <>
       <Navbar.Collapse>
