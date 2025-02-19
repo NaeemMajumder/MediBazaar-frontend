@@ -15,6 +15,7 @@ const CartPage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
 
+  
   // Calculate total items and total price
   const totalPrice = cartData?.reduce(
     (total, item) => total + parseInt(item.productPrice),
