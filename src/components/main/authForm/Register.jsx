@@ -80,6 +80,7 @@ const Register = ({ handleSubmitRegister }) => {
     );
   };
 
+  
   // confirm registration
   const handleRegistrationForm = async (event) => {
     event.preventDefault();
