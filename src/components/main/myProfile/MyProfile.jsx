@@ -18,6 +18,7 @@ const MyProfile = () => {
     const updatedName = formData.get("name");
     const updatedPhotoURL = formData.get("photoURL");
 
+    
     // Call the updateUser function to update user info (you need to define this in AuthProvider)
     updateUserProfile({
       displayName: updatedName,
